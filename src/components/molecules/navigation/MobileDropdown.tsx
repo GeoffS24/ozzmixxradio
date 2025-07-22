@@ -5,7 +5,7 @@ interface MobileDropdownProps {
 
 export function MobileDropdown({ isDropdownOpen, toggleDropdown }: MobileDropdownProps) {
   return (
-    <div className="flex flex-col py-3 gap-2.5">
+    <div className="flex flex-col py-3 gap-2.5  px-5">
       <button
         onClick={toggleDropdown}
         className="flex justify-between items-center w-full text-base font-normal text-foreground"

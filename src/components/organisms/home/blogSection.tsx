@@ -29,7 +29,7 @@ export function BlogSection() {
 
   return (
     <section className="flex py-16 lg:py-16 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
-      <div className="flex max-w-7xl flex-col items-center gap-12 lg:gap-20 w-full">
+      <div className="flex container mx-auto flex-col items-center gap-12 lg:gap-20 w-full">
         <SectionHeader
           badge="Blog"
           title="Latest Music Industry Insights"

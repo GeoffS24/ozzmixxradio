@@ -39,7 +39,7 @@ export function ContactSection() {
 
   return (
     <section className="flex py-16 px-5 flex-col items-center gap-8 bg-white">
-      <div className="flex max-w-7xl flex-col items-center gap-8 w-full">
+      <div className="flex container mx-auto flex-col items-center gap-8 w-full">
         <SectionHeader
           badge="Get in Touch"
           title="Contact Us"
@@ -51,7 +51,7 @@ export function ContactSection() {
         <form onSubmit={handleSubmit} className="flex max-w-[768px] flex-col items-center gap-6 w-full">
           {/* Name Fields */}
           <div className="flex lg:flex-row flex-col items-start gap-6 w-full">
-            <div className="flex flex-col items-start gap-2 flex-1">
+            <div className="flex flex-col items-start gap-2 flex-1 w-full">
               <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 First Name
               </label>
@@ -63,7 +63,7 @@ export function ContactSection() {
                 className="flex h-12 px-3 py-2 items-center gap-2 w-full border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <div className="flex flex-col items-start gap-2 flex-1">
+            <div className="flex flex-col items-start gap-2 flex-1 w-full">
               <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 Last Name
               </label>
@@ -79,7 +79,7 @@ export function ContactSection() {
 
           {/* Email and Phone */}
           <div className="flex lg:flex-row flex-col items-start gap-6 w-full">
-            <div className="flex flex-col items-start gap-2 flex-1">
+            <div className="flex flex-col items-start gap-2 flex-1 w-full">
               <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 Email
               </label>
@@ -91,7 +91,7 @@ export function ContactSection() {
                 className="flex h-12 px-3 py-2 items-center gap-2 w-full border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <div className="flex flex-col items-start gap-2 flex-1">
+            <div className="flex flex-col items-start gap-2 flex-1 w-full">
               <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 Phone Number
               </label>

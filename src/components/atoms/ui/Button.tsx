@@ -13,13 +13,13 @@ export function Button({
   children, 
   ...props 
 }: ButtonProps) {
-  const baseStyles = "flex justify-center items-center gap-2 font-medium transition-colors"
+  const baseStyles = "flex justify-center items-center gap-2 font-medium transition-colors cursor-pointer"
   
   const variants = {
     primary: "bg-persimmon border border-persimmon text-white hover:bg-persimmon-600",
-    secondary: "bg-white border border-white text-foreground hover:bg-gray-100",
+    secondary: "bg-white border border-white text-foreground hover:bg-primary hover:text-white hover:border-primary",
     outline: "border border-border text-foreground hover:bg-muted",
-    ghost: "text-foreground hover:text-primary"
+    ghost: "text-foreground hover:text-brand-primary"
   }
   
   const sizes = {

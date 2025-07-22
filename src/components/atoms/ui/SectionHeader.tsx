@@ -29,7 +29,7 @@ export function SectionHeader({
       {badge && (
         <div className="flex items-center w-full">
           <span className={cn(
-            "text-base font-bold text-foreground",
+            "text-base font-bold text-primary",
             alignment === 'center' && "text-center w-full"
           )}>
             {badge}

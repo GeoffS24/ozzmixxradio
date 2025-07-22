@@ -5,7 +5,7 @@ import { Button } from '@/components/atoms/ui/Button'
 export function MusicSection() {
   return (
     <section className="flex py-16 lg:py-16 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
-      <div className="flex max-w-7xl flex-col items-start gap-12 lg:gap-20 w-full">
+      <div className="flex container w-full mx-auto flex-col items-start gap-12 lg:gap-20 ">
         <div className="flex lg:flex-row flex-col items-center gap-12 lg:gap-20 w-full">
           {/* Content */}
           <div className="flex flex-col items-start gap-8 flex-1">
@@ -21,7 +21,7 @@ export function MusicSection() {
               <div className="flex flex-col items-start gap-4 w-full">
                 <div className="flex lg:flex-row flex-col py-2 items-start gap-6 lg:gap-6 w-full">
                   <div className="flex flex-col items-start gap-4 flex-1">
-                    <h3 className="text-lg lg:text-xl font-normal leading-[140%] tracking-[-0.18px] lg:tracking-[-0.2px] text-foreground w-full">
+                    <h3 className="text-lg lg:text-xl font-normal leading-[140%] tracking-[-0.18px] lg:tracking-[-0.2px] text-primary w-full">
                       Now Playing
                     </h3>
                     <p className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
@@ -29,7 +29,7 @@ export function MusicSection() {
                     </p>
                   </div>
                   <div className="flex flex-col items-start gap-4 flex-1">
-                    <h3 className="text-lg lg:text-xl font-normal leading-[140%] tracking-[-0.18px] lg:tracking-[-0.2px] text-foreground w-full">
+                    <h3 className="text-lg lg:text-xl font-normal leading-[140%] tracking-[-0.18px] lg:tracking-[-0.2px] text-primary w-full">
                       Join Us
                     </h3>
                     <p className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
@@ -42,7 +42,7 @@ export function MusicSection() {
 
             {/* Actions */}
             <div className="flex items-center gap-6">
-              <Button variant="outline" size="md">
+              <Button variant="primary" size="md">
                 Play
               </Button>
               <button className="flex justify-center items-center gap-2 text-sm lg:text-base font-medium text-foreground hover:text-primary transition-colors">

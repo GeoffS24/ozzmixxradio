@@ -24,19 +24,10 @@ export function MobileNavigation() {
           <MobileMenuButton isOpen={isOpen} onClick={toggleMenu} />
         </div>
 
-        {/* Mobile Menu Content */}
         {isOpen && (
           <div className="pb-6">
             <MobileNavLinks />
             <MobileDropdown isDropdownOpen={isDropdownOpen} toggleDropdown={toggleDropdown} />
-
-            <div className="flex px-6 items-start gap-4 py-6 bg-muted">
-              <div className="flex flex-col items-start gap-1">
-                <span className="text-sm text-foreground">Looking for a new opportunity?</span>
-                <Link href="/contact" className="text-sm text-foreground underline">Contact Us</Link>
-              </div>
-            </div>
-
             <MobileNavActions />
           </div>
         )}

@@ -35,8 +35,8 @@ export function ScheduleSection() {
   const filters = ['Fri 09 Feb', 'Sat 10 Feb', 'Sun 11 Feb', 'Category four']
 
   return (
-    <section className="flex py-16 lg:py-16 px-5 flex-col items-start gap-12 lg:gap-20 bg-white">
-      <div className="flex max-w-7xl flex-col items-start gap-12 lg:gap-20 w-full">
+    <section className="flex py-16 lg:py-16 flex-col px-5 items-start gap-12 lg:gap-20 bg-white ">
+      <div className="flex flex-col items-start gap-12 lg:gap-20 container mx-auto w-full">
         <SectionHeader
           badge="Schedule"
           title="Schedule"
