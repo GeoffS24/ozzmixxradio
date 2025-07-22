@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
+import { Button } from '@/components/atoms/ui/Button'
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -38,20 +40,12 @@ export function ContactSection() {
   return (
     <section className="flex py-16 px-5 flex-col items-center gap-8 bg-white">
       <div className="flex max-w-7xl flex-col items-center gap-8 w-full">
-        {/* Section Header */}
-        <div className="flex max-w-[768px] flex-col items-center gap-3 lg:gap-4 w-full">
-          <div className="flex items-center w-full">
-            <span className="text-base font-bold text-foreground text-center w-full">Get in Touch</span>
-          </div>
-          <div className="flex flex-col items-center gap-5 lg:gap-6 w-full">
-            <h2 className="text-4xl lg:text-5xl font-normal leading-[120%] tracking-[-0.36px] lg:tracking-[-0.48px] text-foreground text-center w-full">
-              Contact Us
-            </h2>
-            <p className="text-sm lg:text-lg font-normal leading-[150%] text-foreground text-center w-full">
-              We&apos;d love to hear from you!
-            </p>
-          </div>
-        </div>
+        <SectionHeader
+          badge="Get in Touch"
+          title="Contact Us"
+          description="We'd love to hear from you!"
+          alignment="center"
+        />
 
         {/* Contact Form */}
         <form onSubmit={handleSubmit} className="flex max-w-[768px] flex-col items-center gap-6 w-full">
@@ -147,7 +141,6 @@ export function ContactSection() {
             </div>
           </div>
 
-          {/* User Type Radio Buttons */}
           <div className="flex py-4 flex-col items-start gap-4 w-full">
             <span className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
               Which best describes you?
@@ -277,12 +270,12 @@ export function ContactSection() {
           </div>
 
           {/* Submit Button */}
-          <button
+          <Button
             type="submit"
             className="flex px-6 py-2.5 justify-center items-center gap-2 border border-persimmon bg-persimmon text-sm lg:text-base font-medium text-white hover:bg-persimmon-600 transition-colors"
           >
             Submit
-          </button>
+          </Button>
         </form>
       </div>
     </section>

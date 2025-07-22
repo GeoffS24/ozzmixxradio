@@ -1,6 +1,8 @@
+import { Button } from '@/components/atoms/ui/Button'
+
 export function Hero() {
   return (
-    <section 
+    <section
       className="flex min-h-[812px] lg:min-h-[900px] px-5 flex-col justify-center items-center gap-12 lg:gap-20 bg-cover bg-center bg-no-repeat relative"
       style={{
         backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url('https://api.builder.io/api/v1/image/assets/TEMP/91fa682dcc87178627fa7d9323ad04b994e87705?width=1920')`
@@ -17,12 +19,12 @@ export function Hero() {
             </p>
           </div>
           <div className="flex items-start gap-4">
-            <button className="flex px-6 py-2.5 justify-center items-center gap-2 border border-white bg-white text-sm lg:text-base font-medium text-foreground hover:bg-gray-100 transition-colors">
+            <Button variant="secondary" size="md">
               Listen
-            </button>
-            <button className="flex px-6 py-2.5 justify-center items-center gap-2 border border-white/20 text-sm lg:text-base font-medium text-white hover:bg-white/10 transition-colors">
+            </Button>
+            <Button variant="ghost" size="md" className="border border-white/20 text-white hover:bg-white/10">
               Join
-            </button>
+            </Button>
           </div>
         </div>
       </div>

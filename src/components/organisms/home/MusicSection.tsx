@@ -1,4 +1,6 @@
 import { ChevronRight } from 'lucide-react'
+import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
+import { Button } from '@/components/atoms/ui/Button'
 
 export function MusicSection() {
   return (
@@ -8,20 +10,12 @@ export function MusicSection() {
           {/* Content */}
           <div className="flex flex-col items-start gap-8 flex-1">
             <div className="flex flex-col items-start gap-8 w-full">
-              {/* Section Header */}
-              <div className="flex flex-col items-start gap-4 lg:gap-4 w-full">
-                <div className="flex items-center">
-                  <span className="text-base font-bold text-foreground">Listen</span>
-                </div>
-                <div className="flex flex-col items-start gap-6 w-full">
-                  <h2 className="text-4xl lg:text-5xl font-normal leading-[120%] tracking-[-0.36px] lg:tracking-[-0.48px] text-foreground w-full">
-                    Your Favorite Music, Anytime, Anywhere
-                  </h2>
-                  <p className="text-sm lg:text-lg font-normal leading-[150%] text-foreground w-full">
-                    Tune in to our station for a diverse mix of music. Enjoy seamless listening with our easy-to-use radio player.
-                  </p>
-                </div>
-              </div>
+              <SectionHeader
+                badge="Listen"
+                title="Your Favorite Music, Anytime, Anywhere"
+                description="Tune in to our station for a diverse mix of music. Enjoy seamless listening with our easy-to-use radio player."
+                alignment="left"
+              />
 
               {/* Content Items */}
               <div className="flex flex-col items-start gap-4 w-full">
@@ -48,9 +42,9 @@ export function MusicSection() {
 
             {/* Actions */}
             <div className="flex items-center gap-6">
-              <button className="flex px-6 py-2.5 justify-center items-center gap-2 border border-border text-sm lg:text-base font-medium text-foreground hover:bg-muted transition-colors">
+              <Button variant="outline" size="md">
                 Play
-              </button>
+              </Button>
               <button className="flex justify-center items-center gap-2 text-sm lg:text-base font-medium text-foreground hover:text-primary transition-colors">
                 Pause
                 <ChevronRight className="w-6 h-6" />
