@@ -1,0 +1,31 @@
+export function Hero() {
+  return (
+    <section 
+      className="flex min-h-[812px] lg:min-h-[900px] px-5 flex-col justify-center items-center gap-12 lg:gap-20 bg-cover bg-center bg-no-repeat relative"
+      style={{
+        backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url('https://api.builder.io/api/v1/image/assets/TEMP/91fa682dcc87178627fa7d9323ad04b994e87705?width=1920')`
+      }}
+    >
+      <div className="flex max-w-7xl flex-col items-start gap-12 lg:gap-20 w-full">
+        <div className="flex max-w-[560px] flex-col items-start gap-8 lg:gap-8 w-full">
+          <div className="flex flex-col items-start gap-6 w-full">
+            <h1 className="text-4xl lg:text-[56px] font-normal leading-[120%] lg:leading-[120%] tracking-[-0.4px] lg:tracking-[-0.56px] text-white w-full">
+              Tune In to Your Favorite Radio Station
+            </h1>
+            <p className="text-sm lg:text-lg font-normal leading-[150%] text-white w-full">
+              Welcome to our vibrant radio community, where music and news come alive. Join us for an unforgettable listening experience, tailored just for you!
+            </p>
+          </div>
+          <div className="flex items-start gap-4">
+            <button className="flex px-6 py-2.5 justify-center items-center gap-2 border border-white bg-white text-sm lg:text-base font-medium text-foreground hover:bg-gray-100 transition-colors">
+              Listen
+            </button>
+            <button className="flex px-6 py-2.5 justify-center items-center gap-2 border border-white/20 text-sm lg:text-base font-medium text-white hover:bg-white/10 transition-colors">
+              Join
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
