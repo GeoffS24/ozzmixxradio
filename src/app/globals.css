@@ -213,3 +213,49 @@
 .dropdown-item:hover {
   animation: fadeInScale 0.2s ease-out forwards;
 }
+
+
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(content) {
+  animation: slide-out 0.5s cubic-bezier(0.86, 0, 0.07, 1) forwards;
+}
+
+::view-transition-new(content) {
+  animation: slide-in 0.5s cubic-bezier(0.86, 0, 0.07, 1) forwards;
+}
+
+@keyframes slide-out {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(calc(50% * var(--direction)));
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(-50% * var(--direction)));
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+:root {
+  --direction: -1;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
