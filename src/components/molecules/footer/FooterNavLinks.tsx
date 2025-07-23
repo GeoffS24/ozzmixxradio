@@ -27,12 +27,6 @@ export function FooterNavLinks() {
         <div className="flex py-2 items-start w-full">
           <NavLink href="/contact" variant="footer">Contact</NavLink>
         </div>
-        <div className="flex py-2 items-start w-full">
-          <NavLink href="/careers" variant="footer">Careers</NavLink>
-        </div>
-        <div className="flex py-2 items-start w-full">
-          <NavLink href="/support" variant="footer">Support</NavLink>
-        </div>
       </div>
     </div>
   )

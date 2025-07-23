@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NewsListing } from "@/components/organisms/news/NewsListing";
+import { NewsListingStructuredData } from "@/components/molecules/seo/NewsListingStructuredData";
 import { sanityFetch } from "@/sanity/lib/live";
 import { POSTS_QUERY } from "@/sanity/lib/queries/homeQueries";
 import { CATEGORIES_QUERY } from "@/sanity/lib/queries/newsQueries";
@@ -51,6 +52,11 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
         postsPerPage={postsPerPage}
         searchQuery={searchQuery}
         categoryFilter={categoryFilter}
+      />
+      <NewsListingStructuredData
+        posts={posts || []}
+        currentPage={currentPage}
+        baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://ozzradio.com'}
       />
     </div>
   );
