@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { sanityFetch } from "@/sanity/lib/live";
 import { RADIO_STATION_QUERY } from "@/sanity/lib/queries/homeQueries";
 import { RadioStationData } from "@/types";
+import { SEOTags } from "@/components/molecules/seo/SEOTags";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,6 +54,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <SEOTags canonicalUrl={process.env.NEXT_PUBLIC_SITE_URL} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

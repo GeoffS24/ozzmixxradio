@@ -56,7 +56,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       <NewsListingStructuredData
         posts={posts || []}
         currentPage={currentPage}
-        baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://ozzradio.com'}
+        baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://ozzmixxradio.com/'}
       />
     </div>
   );

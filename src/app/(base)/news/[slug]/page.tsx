@@ -107,7 +107,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
       />
       <ArticleStructuredData
         post={post}
-        baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://ozzradio.com'}
+        baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://ozzmixxradio.com/'}
       />
     </div>
   );
