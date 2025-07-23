@@ -13,18 +13,19 @@ export const metadata: Metadata = {
 };
 
 interface NewsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     category?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function NewsPage({ searchParams }: NewsPageProps) {
-  const currentPage = parseInt(searchParams.page || "1");
+  const { search, category, page } = await searchParams;
+  const currentPage = parseInt(page || "1");
   const postsPerPage = 12;
-  const searchQuery = searchParams.search || "";
-  const categoryFilter = searchParams.category || "";
+  const searchQuery = search || "";
+  const categoryFilter = category || "";
 
   const [postsData, categoriesData] = await Promise.all([
     sanityFetch({

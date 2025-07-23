@@ -8,15 +8,16 @@ import type { BlogPost } from "@/types/sanity";
 import { ArticleStructuredData } from "@/components/molecules/seo/ArticleStructuredData";
 
 interface NewsDetailPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: NewsDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const postData = await sanityFetch({
     query: SINGLE_POST_QUERY,
-    params: { slug: params.slug },
+    params: { slug },
   });
 
   const post = postData.data as BlogPost | null;
@@ -76,10 +77,12 @@ export async function generateMetadata({ params }: NewsDetailPageProps): Promise
 }
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
+  const { slug } = await params;
+
   // Fetch the post
   const postData = await sanityFetch({
     query: SINGLE_POST_QUERY,
-    params: { slug: params.slug },
+    params: { slug },
   });
 
   const post = postData.data as BlogPost | null;
@@ -91,8 +94,8 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const categoryIds = post.categories?.map(cat => cat._id) || [];
   const relatedPostsData = await sanityFetch({
     query: RELATED_POSTS_QUERY,
-    params: { 
-      currentSlug: params.slug,
+    params: {
+      currentSlug: slug,
       categoryIds,
     },
   });

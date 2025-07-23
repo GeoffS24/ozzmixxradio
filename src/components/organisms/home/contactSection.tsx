@@ -20,11 +20,6 @@ export function ContactSection({ data }: ContactSectionProps) {
     emailRecipient: data?.emailRecipient ?? 'info@radiostation.com',
   }
 
-  // Don't render if disabled
-  if (!sectionData.enabled) {
-    return null
-  }
-
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -54,6 +49,10 @@ export function ContactSection({ data }: ContactSectionProps) {
     e.preventDefault()
     console.log('Form submitted:', formData)
     // TODO: Implement form submission to emailRecipient
+  }
+
+  if (!sectionData.enabled) {
+    return null
   }
 
   return (

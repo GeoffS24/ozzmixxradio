@@ -7,16 +7,17 @@ import type { LegalPage } from "@/types/sanity";
 import { LegalPageStructuredData } from "@/components/molecules/seo/LegalPageStructuredData";
 
 interface LegalPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: LegalPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const pageData = await sanityFetch({
     query: LEGAL_PAGE_QUERY,
-    params: { slug: params.slug },
+    params: { slug },
   });
 
   const page = pageData.data as LegalPage | null;
@@ -65,16 +66,18 @@ export async function generateMetadata({ params }: LegalPageProps): Promise<Meta
       description: page.metaDescription || `${pageTypeDisplay} for OZZ Dance Radio`,
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/legal/${params.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/legal/${slug}`,
     },
   };
 }
 
 export default async function LegalPage({ params }: LegalPageProps) {
+  const { slug } = await params;
+
   // Fetch the legal page
   const pageData = await sanityFetch({
     query: LEGAL_PAGE_QUERY,
-    params: { slug: params.slug },
+    params: { slug },
   });
 
   const page = pageData.data as LegalPage | null;
