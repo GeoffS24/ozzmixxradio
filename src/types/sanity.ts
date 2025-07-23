@@ -201,6 +201,26 @@ export interface Category {
   description?: string
 }
 
+// Legal Page Types
+export interface LegalPage {
+  _id: string
+  _type: 'legalPage'
+  title?: string
+  slug?: {
+    current: string
+  }
+  pageType?: 'privacy' | 'terms' | 'cookies' | 'disclaimer' | 'dmca' | 'other'
+  metaDescription?: string
+  content?: any[] // Block content
+  effectiveDate?: string
+  lastUpdated?: string
+  version?: string
+  status?: 'draft' | 'published' | 'archived'
+  contactEmail?: string
+  jurisdiction?: string
+  seoKeywords?: string[]
+}
+
 // Utility types for queries
 export interface SanityDocument {
   _id: string

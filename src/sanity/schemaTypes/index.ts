@@ -7,6 +7,7 @@ import {authorType} from './authorType'
 import {scheduleType} from './scheduleType'
 import {homePageType} from './homePageType'
 import {radioStationType} from './radioStationType'
+import {legalPageType} from './legalPageType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -22,5 +23,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     // Configuration types
     scheduleType,
     radioStationType,
+    legalPageType,
   ],
 }

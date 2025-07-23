@@ -6,6 +6,7 @@ export function DesktopNavLinks() {
       <NavLink href="/">Home</NavLink>
       <NavLink href="/about">About Us</NavLink>
       <NavLink href="/schedule">Schedule</NavLink>
+      <NavLink href="/news">News</NavLink>
     </div>
   )
 }

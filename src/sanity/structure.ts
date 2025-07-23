@@ -77,8 +77,44 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
+      // Legal Pages Section
+      S.listItem()
+        .title('⚖️ Legal Pages')
+        .child(
+          S.list()
+            .title('Legal Documents')
+            .items([
+              S.documentTypeListItem('legalPage')
+                .title('All Legal Pages'),
+              S.divider(),
+              S.listItem()
+                .title('Privacy Policy')
+                .child(
+                  S.documentList()
+                    .title('Privacy Policy')
+                    .filter('_type == "legalPage" && pageType == "privacy"')
+                ),
+              S.listItem()
+                .title('Terms of Service')
+                .child(
+                  S.documentList()
+                    .title('Terms of Service')
+                    .filter('_type == "legalPage" && pageType == "terms"')
+                ),
+              S.listItem()
+                .title('Cookie Policy')
+                .child(
+                  S.documentList()
+                    .title('Cookie Policy')
+                    .filter('_type == "legalPage" && pageType == "cookies"')
+                ),
+            ])
+        ),
+
+      S.divider(),
+
       // Other document types (if any)
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'author', 'homePage', 'schedule', 'radioStation'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'author', 'homePage', 'schedule', 'radioStation', 'legalPage'].includes(item.getId()!),
       ),
     ])

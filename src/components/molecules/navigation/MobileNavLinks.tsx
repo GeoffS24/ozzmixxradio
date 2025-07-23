@@ -6,6 +6,7 @@ export function MobileNavLinks() {
       <NavLink href="/" variant="mobile">Home</NavLink>
       <NavLink href="/about" variant="mobile">About Us</NavLink>
       <NavLink href="/schedule" variant="mobile">Schedule</NavLink>
+      <NavLink href="/news" variant="mobile">News</NavLink>
     </div>
   )
 }

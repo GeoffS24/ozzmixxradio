@@ -22,10 +22,23 @@ export function FooterNavLinks() {
       {/* Secondary Links */}
       <div className="flex flex-col items-start flex-1">
         <div className="flex py-2 items-start w-full">
-          <NavLink href="/blog" variant="footer">Blog</NavLink>
+          <NavLink href="/news" variant="footer">News</NavLink>
         </div>
         <div className="flex py-2 items-start w-full">
           <NavLink href="/contact" variant="footer">Contact</NavLink>
+        </div>
+      </div>
+
+      {/* Legal Links */}
+      <div className="flex flex-col items-start flex-1">
+        <div className="flex py-2 items-start w-full">
+          <NavLink href="/legal/privacy-policy" variant="footer">Privacy Policy</NavLink>
+        </div>
+        <div className="flex py-2 items-start w-full">
+          <NavLink href="/legal/terms-of-service" variant="footer">Terms of Service</NavLink>
+        </div>
+        <div className="flex py-2 items-start w-full">
+          <NavLink href="/legal/cookie-policy" variant="footer">Cookie Policy</NavLink>
         </div>
       </div>
     </div>
