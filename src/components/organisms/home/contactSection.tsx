@@ -4,8 +4,27 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { Button } from '@/components/atoms/ui/Button'
+import type { ContactSectionData } from '@/types/sanity'
 
-export function ContactSection() {
+interface ContactSectionProps {
+  data?: ContactSectionData
+}
+
+export function ContactSection({ data }: ContactSectionProps) {
+  // Default values
+  const sectionData = {
+    enabled: data?.enabled ?? true,
+    badge: data?.badge ?? 'Contact',
+    title: data?.title ?? 'Get in Touch',
+    description: data?.description ?? 'Have questions or want to get involved? We\'d love to hear from you!',
+    emailRecipient: data?.emailRecipient ?? 'info@radiostation.com',
+  }
+
+  // Don't render if disabled
+  if (!sectionData.enabled) {
+    return null
+  }
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -34,16 +53,16 @@ export function ContactSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
-    // Handle form submission here
+    // TODO: Implement form submission to emailRecipient
   }
 
   return (
     <section className="flex py-16 px-5 flex-col items-center gap-8 bg-white">
       <div className="flex container mx-auto flex-col items-center gap-8 w-full">
         <SectionHeader
-          badge="Get in Touch"
-          title="Contact Us"
-          description="We'd love to hear from you!"
+          badge={sectionData.badge}
+          title={sectionData.title}
+          description={sectionData.description}
           alignment="center"
         />
 

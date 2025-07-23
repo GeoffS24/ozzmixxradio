@@ -1,0 +1,94 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { NewsDetail } from "@/components/organisms/news/NewsDetail";
+import { sanityFetch } from "@/sanity/lib/live";
+import { SINGLE_POST_QUERY, RELATED_POSTS_QUERY } from "@/sanity/lib/queries/newsQueries";
+import type { BlogPost } from "@/types/sanity";
+
+interface NewsDetailPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export async function generateMetadata({ params }: NewsDetailPageProps): Promise<Metadata> {
+  const postData = await sanityFetch({
+    query: SINGLE_POST_QUERY,
+    params: { slug: params.slug },
+  });
+
+  const post = postData.data as BlogPost | null;
+
+  if (!post) {
+    return {
+      title: "Post Not Found - OZZ Dance Radio",
+      description: "The requested post could not be found.",
+    };
+  }
+
+  const excerpt = post.body?.find((block: any) => block._type === 'block')?.children
+    ?.filter((child: any) => child._type === 'span')
+    ?.map((child: any) => child.text)
+    ?.join(' ')
+    ?.substring(0, 160) || 'Read the latest music industry insights from OZZ Dance Radio.';
+
+  return {
+    title: `${post.title} - OZZ Dance Radio`,
+    description: excerpt,
+    keywords: [
+      'music news',
+      'dance music',
+      'electronic music',
+      ...(post.categories?.map(cat => cat.title).filter((title): title is string => Boolean(title)) || []),
+    ],
+    authors: post.author?.name ? [{ name: post.author.name }] : undefined,
+    openGraph: {
+      title: post.title,
+      description: excerpt,
+      type: 'article',
+      publishedTime: post.publishedAt,
+      modifiedTime: post._updatedAt,
+      authors: post.author?.name ? [post.author.name] : undefined,
+      tags: post.categories?.map(cat => cat.title).filter((title): title is string => Boolean(title)) || [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: excerpt,
+    },
+  };
+}
+
+export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
+  // Fetch the post
+  const postData = await sanityFetch({
+    query: SINGLE_POST_QUERY,
+    params: { slug: params.slug },
+  });
+
+  const post = postData.data as BlogPost | null;
+
+  if (!post) {
+    notFound();
+  }
+
+  const categoryIds = post.categories?.map(cat => cat._id) || [];
+  const relatedPostsData = await sanityFetch({
+    query: RELATED_POSTS_QUERY,
+    params: { 
+      currentSlug: params.slug,
+      categoryIds,
+    },
+  });
+
+  const relatedPosts = relatedPostsData.data as BlogPost[] | null;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <NewsDetail
+        post={post}
+        relatedPosts={relatedPosts || []}
+      />
+    </div>
+  );
+}

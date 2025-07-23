@@ -1,63 +1,70 @@
-import { ChevronRight } from 'lucide-react'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
-import { Button } from '@/components/atoms/ui/Button'
+import { RadioPlayer } from '@/components/molecules/media/RadioPlayer'
+import { urlFor } from '@/sanity/lib/image'
 
-export function MusicSection() {
+interface MusicSectionData {
+  enabled?: boolean
+  badge?: string
+  title?: string
+  description?: string
+  radioStreamUrl?: string
+  statusApiUrl?: string
+  fallbackImage?: {
+    asset?: {
+      _ref: string
+    }
+    alt?: string
+  }
+}
+
+interface MusicSectionProps {
+  data?: MusicSectionData
+}
+
+export function MusicSection({ data }: MusicSectionProps) {
+  // Default values
+  const sectionData = {
+    enabled: data?.enabled ?? true,
+    badge: data?.badge ?? 'Listen',
+    title: data?.title ?? 'Your Favorite Music, Anytime, Anywhere',
+    description: data?.description ?? 'Tune in to our station for a diverse mix of music. Enjoy seamless listening with our easy-to-use radio player.',
+    radioStreamUrl: data?.radioStreamUrl ?? 'https://a2.asurahosting.com/listen/ozzmixx_dance_radio/radio.mp3',
+    statusApiUrl: data?.statusApiUrl ?? 'https://a2.asurahosting.com:7330/status-json.xsl',
+  }
+
+  // Don't render if disabled
+  if (!sectionData.enabled) {
+    return null
+  }
+
+  // Get fallback image URL
+  const fallbackImageUrl = data?.fallbackImage?.asset?._ref
+    ? urlFor(data.fallbackImage).width(640).height(640).url()
+    : 'https://images.pexels.com/photos/1876279/pexels-photo-1876279.jpeg'
+
   return (
     <section className="flex py-16 lg:py-16 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
-      <div className="flex container w-full mx-auto flex-col items-start gap-12 lg:gap-20 ">
+      <div className="flex container w-full mx-auto flex-col items-start gap-12 lg:gap-20">
         <div className="flex lg:flex-row flex-col items-center gap-12 lg:gap-20 w-full">
           {/* Content */}
           <div className="flex flex-col items-start gap-8 flex-1">
-            <div className="flex flex-col items-start gap-8 w-full">
-              <SectionHeader
-                badge="Listen"
-                title="Your Favorite Music, Anytime, Anywhere"
-                description="Tune in to our station for a diverse mix of music. Enjoy seamless listening with our easy-to-use radio player."
-                alignment="left"
-              />
-
-              {/* Content Items */}
-              <div className="flex flex-col items-start gap-4 w-full">
-                <div className="flex lg:flex-row flex-col py-2 items-start gap-6 lg:gap-6 w-full">
-                  <div className="flex flex-col items-start gap-4 flex-1">
-                    <h3 className="text-lg lg:text-xl font-normal leading-[140%] tracking-[-0.18px] lg:tracking-[-0.2px] text-primary w-full">
-                      Now Playing
-                    </h3>
-                    <p className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
-                      Catch the latest hits and timeless classics on our station.
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-start gap-4 flex-1">
-                    <h3 className="text-lg lg:text-xl font-normal leading-[140%] tracking-[-0.18px] lg:tracking-[-0.2px] text-primary w-full">
-                      Join Us
-                    </h3>
-                    <p className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
-                      Become part of our community and share your music passion.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-6">
-              <Button variant="primary" size="md">
-                Play
-              </Button>
-              <button className="flex justify-center items-center gap-2 text-sm lg:text-base font-medium text-foreground hover:text-primary transition-colors">
-                Pause
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </div>
+            <SectionHeader
+              badge={sectionData.badge}
+              title={sectionData.title}
+              description={sectionData.description}
+              alignment="left"
+            />
           </div>
 
-          {/* Image */}
-          <div className="flex-1 lg:block hidden">
-            <img 
-              src="https://api.builder.io/api/v1/image/assets/TEMP/fe588bac4b942144462e3a9a910d396ca0278214?width=640" 
-              alt="Radio Music Player" 
-              className="w-full h-auto aspect-[335/348] object-cover"
+          {/* Radio Player */}
+          <div className="flex-1 flex justify-center">
+            <RadioPlayer
+              streamUrl={sectionData.radioStreamUrl}
+              statusApiUrl={sectionData.statusApiUrl}
+              fallbackImage={fallbackImageUrl}
+              className="max-w-[400px]"
+              defaultVolume={50}
+              autoPlay={false}
             />
           </div>
         </div>
