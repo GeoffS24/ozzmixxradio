@@ -3,6 +3,7 @@ import { ContactSection } from "@/components/organisms/home/contactSection";
 import { Hero } from "@/components/organisms/home/Hero";
 import { MusicSection } from "@/components/organisms/home/MusicSection";
 import { ScheduleSection } from "@/components/organisms/home/scheduleSection";
+import { AppDownloadSection } from "@/components/organisms/home/AppDownloadSection";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HOME_PAGE_QUERY, SCHEDULE_QUERY, POSTS_QUERY } from "@/sanity/lib/queries/homeQueries";
 import type { HomePageData, ScheduleData, BlogPost } from "@/types/sanity";
@@ -34,6 +35,7 @@ export default async function Home() {
         scheduleData={schedule}
       />
       <BlogSection data={homePage?.blogSection} posts={posts || []} />
+      <AppDownloadSection data={homePage?.appDownloadSection} />
       <ContactSection data={homePage?.contactSection} />
     </div>
   );

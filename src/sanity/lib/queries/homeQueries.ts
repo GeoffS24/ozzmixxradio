@@ -58,6 +58,21 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == 'homePage' && _id == 'hom
     title,
     description,
     emailRecipient
+  },
+  appDownloadSection {
+    enabled,
+    badge,
+    title,
+    description,
+    androidUrl,
+    iosUrl,
+    backgroundImage {
+      asset->{
+        _id,
+        url
+      },
+      alt
+    }
   }
 }`);
 

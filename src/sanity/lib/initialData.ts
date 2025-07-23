@@ -46,6 +46,14 @@ export const initialHomePageData = {
     description: 'Have questions or want to get involved? We\'d love to hear from you!',
     emailRecipient: 'info@ozzradio.com',
   },
+  appDownloadSection: {
+    enabled: true,
+    badge: 'Download App',
+    title: 'Take OZZ Dance Radio With You',
+    description: 'Download our mobile app and enjoy your favorite dance music anywhere, anytime. Available for both Android and iOS devices.',
+    androidUrl: 'https://play.google.com/store/apps/details?id=com.ozzmix.radio&pcampaignid=web_share',
+    iosUrl: 'https://apps.apple.com/us/app/ozzmixx-dance-radio/id6477762868?platform=iphone',
+  },
 }
 
 export const initialScheduleData = {

@@ -34,6 +34,7 @@ export interface HomePageData {
   scheduleSection?: ScheduleSectionData
   blogSection?: BlogSectionData
   contactSection?: ContactSectionData
+  appDownloadSection?: AppDownloadSectionData
 }
 
 export interface HeroSectionData {
@@ -84,6 +85,16 @@ export interface ContactSectionData {
   title?: string
   description?: string
   emailRecipient?: string
+}
+
+export interface AppDownloadSectionData {
+  enabled?: boolean
+  badge?: string
+  title?: string
+  description?: string
+  androidUrl?: string
+  iosUrl?: string
+  backgroundImage?: SanityImage
 }
 
 // Schedule Types

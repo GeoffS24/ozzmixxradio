@@ -290,6 +290,70 @@ export const homePageType = defineType({
         }),
       ],
     }),
+
+    // App Download Section
+    defineField({
+      name: 'appDownloadSection',
+      title: 'App Download Section',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'enabled',
+          title: 'Enable App Download Section',
+          type: 'boolean',
+          initialValue: true,
+        }),
+        defineField({
+          name: 'badge',
+          title: 'Section Badge',
+          type: 'string',
+          initialValue: 'Download App',
+        }),
+        defineField({
+          name: 'title',
+          title: 'Section Title',
+          type: 'string',
+          initialValue: 'Take OZZ Dance Radio With You',
+        }),
+        defineField({
+          name: 'description',
+          title: 'Section Description',
+          type: 'text',
+          rows: 3,
+          initialValue: 'Download our mobile app and enjoy your favorite dance music anywhere, anytime. Available for both Android and iOS devices.',
+        }),
+        defineField({
+          name: 'androidUrl',
+          title: 'Android App URL',
+          type: 'url',
+          description: 'Google Play Store URL',
+          initialValue: 'https://play.google.com/store/apps/details?id=com.ozzmix.radio&pcampaignid=web_share',
+        }),
+        defineField({
+          name: 'iosUrl',
+          title: 'iOS App URL',
+          type: 'url',
+          description: 'Apple App Store URL',
+          initialValue: 'https://apps.apple.com/us/app/ozzmixx-dance-radio/id6477762868?platform=iphone',
+        }),
+        defineField({
+          name: 'backgroundImage',
+          title: 'Background Image',
+          type: 'image',
+          description: 'Optional background image for the section',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+            }),
+          ],
+        }),
+      ],
+    }),
   ],
   preview: {
     select: {
