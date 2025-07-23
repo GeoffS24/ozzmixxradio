@@ -53,31 +53,57 @@ export function useRadioPlayer({
   // Initialize audio element
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      audioRef.current = new Audio(streamUrl)
-      audioRef.current.volume = defaultVolume / 100
+      audioRef.current = new Audio()
+      // Configure for streaming
       audioRef.current.preload = 'none'
+      audioRef.current.volume = defaultVolume / 100
+
+      // Try without crossOrigin first for better compatibility
+      // audioRef.current.crossOrigin = 'anonymous'
+
+      // Add additional attributes for better streaming support
+      audioRef.current.setAttribute('controls', 'false')
+      audioRef.current.setAttribute('autoplay', 'false')
+
+      console.log('Audio element initialized')
 
       // Audio event listeners
       const audio = audioRef.current
 
       const handleLoadStart = () => {
+        console.log('Audio load started')
         setState(prev => ({ ...prev, isLoading: true, error: null }))
       }
 
       const handleCanPlay = () => {
+        console.log('Audio can play')
         setState(prev => ({ ...prev, isLoading: false, isConnected: true }))
       }
 
       const handlePlay = () => {
+        console.log('Audio playing')
         setState(prev => ({ ...prev, isPlaying: true, isLoading: false }))
       }
 
       const handlePause = () => {
+        console.log('Audio paused')
         setState(prev => ({ ...prev, isPlaying: false }))
+      }
+
+      const handleWaiting = () => {
+        console.log('Audio waiting/buffering')
+        setState(prev => ({ ...prev, isLoading: true }))
+      }
+
+      const handlePlaying = () => {
+        console.log('Audio resumed playing')
+        setState(prev => ({ ...prev, isLoading: false, isPlaying: true }))
       }
 
       const handleError = (e: Event) => {
         const error = (e.target as HTMLAudioElement)?.error
+        console.error('Audio error:', error, 'Event:', e)
+        
         let errorMessage = 'Failed to load radio stream'
         
         if (error) {
@@ -91,8 +117,11 @@ export function useRadioPlayer({
             case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
               errorMessage = 'Audio format not supported'
               break
+            case error.MEDIA_ERR_ABORTED:
+              errorMessage = 'Audio loading aborted'
+              break
             default:
-              errorMessage = 'Unknown audio error'
+              errorMessage = `Unknown audio error (code: ${error.code})`
           }
         }
 
@@ -105,30 +134,25 @@ export function useRadioPlayer({
         }))
       }
 
-      const handleWaiting = () => {
-        setState(prev => ({ ...prev, isLoading: true }))
+      const handleLoadedMetadata = () => {
+        console.log('Audio metadata loaded')
+        setState(prev => ({ ...prev, isConnected: true }))
       }
 
-      const handlePlaying = () => {
-        setState(prev => ({ ...prev, isLoading: false, isConnected: true }))
-      }
-
+      // Add event listeners
       audio.addEventListener('loadstart', handleLoadStart)
       audio.addEventListener('canplay', handleCanPlay)
+      audio.addEventListener('loadedmetadata', handleLoadedMetadata)
       audio.addEventListener('play', handlePlay)
       audio.addEventListener('pause', handlePause)
       audio.addEventListener('error', handleError)
       audio.addEventListener('waiting', handleWaiting)
       audio.addEventListener('playing', handlePlaying)
 
-      // Auto play if enabled
-      if (autoPlay) {
-        play()
-      }
-
       return () => {
         audio.removeEventListener('loadstart', handleLoadStart)
         audio.removeEventListener('canplay', handleCanPlay)
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
         audio.removeEventListener('play', handlePlay)
         audio.removeEventListener('pause', handlePause)
         audio.removeEventListener('error', handleError)
@@ -136,7 +160,7 @@ export function useRadioPlayer({
         audio.removeEventListener('playing', handlePlaying)
       }
     }
-  }, [streamUrl, defaultVolume, autoPlay])
+  }, [defaultVolume])
 
   // Fetch current track information
   const fetchTrackInfo = useCallback(async () => {
@@ -206,20 +230,63 @@ export function useRadioPlayer({
 
   // Player controls
   const play = useCallback(async () => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {
+      console.error('Audio element not initialized')
+      return
+    }
 
     try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }))
-      await audioRef.current.play()
+      console.log('Attempting to play stream:', streamUrl)
+      setState(prev => ({ ...prev, error: null, isLoading: true }))
+
+      // Stop any current playback
+      audioRef.current.pause()
+
+      // Set the stream URL
+      audioRef.current.src = streamUrl
+
+      // Try to play
+      const playPromise = audioRef.current.play()
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('Playback started successfully')
+          })
+          .catch((error) => {
+            console.error('Play promise rejected:', error)
+
+            let errorMessage = 'Failed to start playback'
+
+            if (error.name === 'NotAllowedError') {
+              errorMessage = 'Playback blocked by browser. User interaction required.'
+            } else if (error.name === 'NotSupportedError') {
+              errorMessage = 'Audio format not supported'
+            } else if (error.name === 'AbortError') {
+              errorMessage = 'Playback was interrupted'
+            } else if (error.message) {
+              errorMessage = error.message
+            }
+
+            setState(prev => ({
+              ...prev,
+              isLoading: false,
+              error: errorMessage,
+              isConnected: false
+            }))
+          })
+      }
+
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: 'Failed to start playback. Please try again.',
-        isConnected: false 
+      console.error('Play failed with exception:', error)
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: `Playback error: ${error.message}`,
+        isConnected: false
       }))
     }
-  }, [])
+  }, [streamUrl])
 
   const pause = useCallback(() => {
     if (!audioRef.current) return

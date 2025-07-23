@@ -60,9 +60,8 @@ export function SEOTags({
         />
       ))}
 
-      {/* Security headers */}
+      {/* Security headers - Remove X-Frame-Options as it can't be set via meta */}
       <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-      <meta httpEquiv="X-Frame-Options" content="DENY" />
       <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
 
       {/* Rich snippets for radio station */}

@@ -47,7 +47,9 @@ export function RadioPlayer({
   const VolumeIcon = getVolumeIcon()
 
   return (
-    <div className={cn("flex flex-col items-center gap-6 w-full", className)}>
+    <div className={cn("flex flex-col items-center justify-center gap-6 w-full", className)}>
+      
+
       {/* Player Image with Play Button Overlay */}
       <div className="relative w-full max-w-[400px] aspect-square">
         <img
@@ -62,7 +64,10 @@ export function RadioPlayer({
         {/* Play/Pause Button Overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
           <button
-            onClick={togglePlay}
+            onClick={() => {
+              console.log('Play button clicked, current state:', { isPlaying, isLoading })
+              togglePlay()
+            }}
             disabled={isLoading}
             className={cn(
               "flex items-center justify-center w-20 h-20 rounded-full transition-all duration-300",

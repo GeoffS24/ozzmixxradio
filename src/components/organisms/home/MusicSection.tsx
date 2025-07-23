@@ -1,5 +1,6 @@
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { RadioPlayer } from '@/components/molecules/media/RadioPlayer'
+import { AudioStreamTester } from '@/components/molecules/media/AudioStreamTester'
 import { urlFor } from '@/sanity/lib/image'
 
 interface MusicSectionData {
@@ -45,7 +46,7 @@ export function MusicSection({ data }: MusicSectionProps) {
   return (
     <section className="flex py-16 lg:py-16 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
       <div className="flex container w-full mx-auto flex-col items-start gap-12 lg:gap-20">
-        <div className="flex lg:flex-row flex-col items-center gap-12 lg:gap-20 w-full">
+        <div className="flex lg:flex-row flex-col items-center justify-between gap-12 lg:gap-20 w-full">
           {/* Content */}
           <div className="flex flex-col items-start gap-8 flex-1">
             <SectionHeader
@@ -57,12 +58,12 @@ export function MusicSection({ data }: MusicSectionProps) {
           </div>
 
           {/* Radio Player */}
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex w-full flex-col gap-6 justify-center ">
             <RadioPlayer
               streamUrl={sectionData.radioStreamUrl}
               statusApiUrl={sectionData.statusApiUrl}
               fallbackImage={fallbackImageUrl}
-              className="max-w-[400px]"
+              className="max-w-[400px] mx-auto"
               defaultVolume={50}
               autoPlay={false}
             />
