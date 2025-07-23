@@ -182,7 +182,7 @@ export function NewsDetail({ post, relatedPosts }: NewsDetailProps) {
                   <Link 
                     key={relatedPost.id} 
                     href={`/news/${relatedPost.slug}`}
-                    className="hover:scale-105 transition-transform duration-200"
+                    className="transition-transform duration-200"
                   >
                     <BlogCard
                       image={relatedPost.image}

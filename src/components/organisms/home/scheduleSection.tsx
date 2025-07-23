@@ -1,87 +1,90 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react'
-import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
-import { FilterButton } from '@/components/atoms/ui/FilterButton'
-import { ScheduleItem } from '@/components/molecules/cards/ScheduleItem'
-import { urlFor } from '@/sanity/lib/image'
-import type { ScheduleSectionData, ScheduleData, DaySchedule, TimeSlot } from '@/types/sanity'
+import { useState, useEffect } from "react";
+import { SectionHeader } from "@/components/atoms/ui/SectionHeader";
+import { FilterButton } from "@/components/atoms/ui/FilterButton";
+import { ScheduleItem } from "@/components/molecules/cards/ScheduleItem";
+import { urlFor } from "@/sanity/lib/image";
+import type {
+  ScheduleSectionData,
+  ScheduleData,
+  DaySchedule,
+  TimeSlot,
+} from "@/types/sanity";
 
 interface ScheduleSectionProps {
-  data?: ScheduleSectionData
-  scheduleData?: ScheduleData | null
+  data?: ScheduleSectionData;
+  scheduleData?: ScheduleData | null;
 }
 
 export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
-  // Default values
   const sectionData = {
     enabled: data?.enabled ?? true,
-    badge: data?.badge ?? 'Schedule',
-    title: data?.title ?? 'Schedule',
-    description: data?.description ?? 'Tune in to our weekly schedule for engaging shows and insightful discussions that keep you entertained.',
-    displayFormat: data?.displayFormat ?? 'list',
+    badge: data?.badge ?? "Schedule",
+    title: data?.title ?? "Schedule",
+    description:
+      data?.description ??
+      "Tune in to our weekly schedule for engaging shows and insightful discussions that keep you entertained.",
+    displayFormat: data?.displayFormat ?? "list",
     showCurrentTime: data?.showCurrentTime ?? true,
-  }
+  };
 
-  // Don't render if disabled
-  if (!sectionData.enabled) {
-    return null
-  }
+  const [activeDay, setActiveDay] = useState<string>("monday");
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
-  const [activeDay, setActiveDay] = useState<string>('monday')
-  const [currentTime, setCurrentTime] = useState<Date>(new Date())
-
-  // Update current time every minute
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 60000) // Update every minute
+      setCurrentTime(new Date());
+    }, 60000); 
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
-  // Get day names for filters
+
   const dayNames = {
-    monday: 'Monday',
-    tuesday: 'Tuesday',
-    wednesday: 'Wednesday',
-    thursday: 'Thursday',
-    friday: 'Friday',
-    saturday: 'Saturday',
-    sunday: 'Sunday',
-  }
+    monday: "Monday",
+    tuesday: "Tuesday",
+    wednesday: "Wednesday",
+    thursday: "Thursday",
+    friday: "Friday",
+    saturday: "Saturday",
+    sunday: "Sunday",
+  };
 
-  // Get current day
-  const currentDayIndex = currentTime.getDay()
-  const currentDayName = Object.keys(dayNames)[currentDayIndex === 0 ? 6 : currentDayIndex - 1] // Convert Sunday=0 to Saturday=6
+  const currentDayIndex = currentTime.getDay();
+  const currentDayName =
+    Object.keys(dayNames)[currentDayIndex === 0 ? 6 : currentDayIndex - 1]; 
 
-  // Set initial active day to current day
   useEffect(() => {
-    setActiveDay(currentDayName)
-  }, [currentDayName])
+    setActiveDay(currentDayName);
+  }, [currentDayName]);
 
-  // Get schedule for active day
   const activeDaySchedule = scheduleData?.weeklySchedule?.find(
     (day: DaySchedule) => day.dayOfWeek === activeDay
-  )
+  );
 
-  // Format time for display
   const formatTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':')
-    const hour = parseInt(hours)
-    const ampm = hour >= 12 ? 'PM' : 'AM'
-    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
-    return `${displayHour}:${minutes} ${ampm}`
-  }
+    const [hours, minutes] = timeString.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour}:${minutes} ${ampm}`;
+  };
 
-  // Check if a time slot is currently active
   const isCurrentShow = (timeSlot: TimeSlot) => {
-    if (!sectionData.showCurrentTime) return false
+    if (!sectionData.showCurrentTime) return false;
 
-    const now = currentTime
-    const currentTimeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+    const now = currentTime;
+    const currentTimeString = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 
-    return currentTimeString >= timeSlot.startTime && currentTimeString < timeSlot.endTime
+    return (
+      currentTimeString >= timeSlot.startTime &&
+      currentTimeString < timeSlot.endTime
+    );
+  };
+
+  if (!sectionData.enabled) {
+    return null;
   }
 
   return (
@@ -100,9 +103,9 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
             <span>Station Time:</span>
             <span className="font-medium text-primary">
               {currentTime.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-                timeZoneName: 'short'
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZoneName: "short",
               })}
             </span>
           </div>
@@ -128,52 +131,56 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
           </div>
 
           {/* Schedule Display */}
-          {activeDaySchedule?.timeSlots && activeDaySchedule.timeSlots.length > 0 ? (
+          {activeDaySchedule?.timeSlots &&
+          activeDaySchedule.timeSlots.length > 0 ? (
             <div className="flex flex-col items-start w-full">
-              {activeDaySchedule.timeSlots.map((timeSlot: TimeSlot, index: number) => {
-                const imageUrl = timeSlot.showImage?.asset?._ref
-                  ? urlFor(timeSlot.showImage).width(300).height(300).url()
-                  : 'https://api.builder.io/api/v1/image/assets/TEMP/5a085be3383805be7bc24b67346caed01172c0e0?width=300'
+              {activeDaySchedule.timeSlots.map(
+                (timeSlot: TimeSlot, index: number) => {
+                  const imageUrl = timeSlot.showImage?.asset?._ref
+                    ? urlFor(timeSlot.showImage).width(300).height(300).url()
+                    : "https://api.builder.io/api/v1/image/assets/TEMP/5a085be3383805be7bc24b67346caed01172c0e0?width=300";
 
-                return (
-                  <div
-                    key={index}
-                    className={`w-full ${isCurrentShow(timeSlot) ? 'bg-primary/5 border-l-4 border-primary pl-4' : ''}`}
-                  >
-                    <ScheduleItem
-                      time={`${formatTime(timeSlot.startTime)} - ${formatTime(timeSlot.endTime)}`}
-                      title={timeSlot.showName || 'Untitled Show'}
-                      host={timeSlot.hostName || 'Unknown Host'}
-                      location={timeSlot.genre || 'Music'}
-                      image={imageUrl}
-                      isFirst={index === 0}
-                    />
-                    {timeSlot.description && (
-                      <div className="ml-24 lg:ml-44 pb-4 text-sm text-muted-foreground">
-                        {timeSlot.description}
-                      </div>
-                    )}
-                    {isCurrentShow(timeSlot) && (
-                      <div className="ml-24 lg:ml-44 pb-4">
-                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                          LIVE NOW
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
+                  return (
+                    <div
+                      key={index}
+                      className={`w-full ${isCurrentShow(timeSlot) ? "bg-primary/5 border-l-4 border-primary pl-4" : ""}`}
+                    >
+                      <ScheduleItem
+                        time={`${formatTime(timeSlot.startTime)} - ${formatTime(timeSlot.endTime)}`}
+                        title={timeSlot.showName || "Untitled Show"}
+                        host={timeSlot.hostName || "Unknown Host"}
+                        location={timeSlot.genre || "Music"}
+                        image={imageUrl}
+                        isFirst={index === 0}
+                      />
+                      {timeSlot.description && (
+                        <div className="sm:ml-24 lg:ml-44 pb-4 text-sm text-muted-foreground">
+                          {timeSlot.description}
+                        </div>
+                      )}
+                      {isCurrentShow(timeSlot) && (
+                        <div className="ml-24 lg:ml-44 pb-4">
+                          <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                            LIVE NOW
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <p className="text-muted-foreground">
-                No shows scheduled for {dayNames[activeDay as keyof typeof dayNames]}.
+                No shows scheduled for{" "}
+                {dayNames[activeDay as keyof typeof dayNames]}.
               </p>
             </div>
           )}
         </div>
       </div>
     </section>
-  )
+  );
 }

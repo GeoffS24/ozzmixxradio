@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
 
 interface BlogCardProps {
@@ -11,11 +12,15 @@ interface BlogCardProps {
 export function BlogCard({ image, tag, readTime, title, description }: BlogCardProps) {
   return (
     <div className="flex flex-col items-start gap-6 flex-1">
-      <img
-        src={image}
-        alt={title}
-        className="h-[221px] lg:h-auto w-full aspect-[335/221] lg:aspect-[1/0.67] object-cover"
-      />
+      <div className="relative h-[221px] lg:h-auto w-full aspect-[335/221] lg:aspect-[1/0.67] overflow-hidden rounded-lg">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover transition-transform duration-300 hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+      </div>
       <div className="flex flex-col items-start gap-4 w-full">
         {/* Info */}
         <div className="flex items-center gap-4">

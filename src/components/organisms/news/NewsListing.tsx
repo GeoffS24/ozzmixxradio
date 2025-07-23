@@ -99,7 +99,6 @@ export function NewsListing({
   return (
     <section className="flex py-16 lg:py-20 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
       <div className="flex container mx-auto flex-col items-center gap-12 lg:gap-16 w-full">
-        {/* Header */}
         <SectionHeader
           badge="News & Blog"
           title="Latest Music Industry Insights"
@@ -107,9 +106,7 @@ export function NewsListing({
           alignment="center"
         />
 
-        {/* Search and Filters */}
         <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
-          {/* Search Input */}
           <SearchInput
             value={localSearchQuery}
             onChange={setLocalSearchQuery}
@@ -117,7 +114,6 @@ export function NewsListing({
             className="w-full max-w-md"
           />
 
-          {/* Category Filters */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             <FilterButton
               isActive={!localCategoryFilter}
@@ -138,7 +134,6 @@ export function NewsListing({
           </div>
         </div>
 
-        {/* Results Info */}
         <div className="flex items-center justify-between w-full">
           <p className="text-sm text-muted-foreground">
             {totalPosts === 0 
@@ -148,14 +143,13 @@ export function NewsListing({
           </p>
         </div>
 
-        {/* Posts Grid */}
         {transformedPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
             {transformedPosts.map((post) => (
               <Link 
                 key={post.id} 
                 href={`/news/${post.slug}`}
-                className="hover:scale-105 transition-transform duration-200"
+                className=" transition-transform duration-200"
               >
                 <BlogCard
                   image={post.image}
@@ -172,12 +166,11 @@ export function NewsListing({
             <Search className="w-12 h-12 text-muted-foreground mb-4" />
             <h3 className="text-xl font-semibold text-foreground mb-2">No articles found</h3>
             <p className="text-muted-foreground max-w-md">
-              Try adjusting your search terms or category filters to find what you're looking for.
+              Try adjusting your search terms or category filters to find what you&apos;re looking for.
             </p>
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}

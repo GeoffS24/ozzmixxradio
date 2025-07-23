@@ -11,7 +11,6 @@ interface BlogSectionProps {
 }
 
 export function BlogSection({ data, posts = [] }: BlogSectionProps) {
-  // Default values
   const sectionData = {
     enabled: data?.enabled ?? true,
     badge: data?.badge ?? 'Blog',
@@ -20,12 +19,10 @@ export function BlogSection({ data, posts = [] }: BlogSectionProps) {
     postsToShow: data?.postsToShow ?? 3,
   }
 
-  // Don't render if disabled
   if (!sectionData.enabled) {
     return null
   }
 
-  // Helper function to calculate reading time
   const calculateReadingTime = (body: any[]) => {
     if (!body || !Array.isArray(body)) return '5 min read'
 
@@ -40,11 +37,10 @@ export function BlogSection({ data, posts = [] }: BlogSectionProps) {
       return count
     }, 0)
 
-    const readingTime = Math.ceil(wordCount / 200) // Average reading speed
+    const readingTime = Math.ceil(wordCount / 200) 
     return `${readingTime} min read`
   }
 
-  // Transform Sanity posts to BlogCard format
   const blogPosts = posts
     .slice(0, sectionData.postsToShow)
     .map((post) => {
@@ -55,7 +51,6 @@ export function BlogSection({ data, posts = [] }: BlogSectionProps) {
       const primaryCategory = post.categories?.[0]?.title || 'News'
       const readTime = calculateReadingTime(post.body || [])
 
-      // Create excerpt from body
       const excerpt = post.body?.find((block: any) => block._type === 'block')?.children
         ?.filter((child: any) => child._type === 'span')
         ?.map((child: any) => child.text)
@@ -83,16 +78,14 @@ export function BlogSection({ data, posts = [] }: BlogSectionProps) {
           alignment="center"
         />
 
-        {/* Content */}
         <div className="flex flex-col items-start gap-16 lg:gap-16 w-full">
-          {/* Blog Posts */}
           {blogPosts.length > 0 ? (
             <div className="flex lg:flex-row flex-col items-start gap-8 w-full">
               {blogPosts.map((post) => (
                 <Link
                   key={post.id}
                   href={`/news/${post.slug}`}
-                  className="flex-1 hover:scale-105 transition-transform duration-200"
+                  className="flex-1 transition-transform duration-200"
                 >
                   <BlogCard
                     image={post.image}

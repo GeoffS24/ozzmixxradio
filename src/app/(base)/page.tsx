@@ -26,7 +26,7 @@ export default async function Home() {
   const posts = postsData.data as BlogPost[] | null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background ">
       <Hero data={homePage?.heroSection} />
       <MusicSection data={homePage?.musicSection} />
       <ScheduleSection
