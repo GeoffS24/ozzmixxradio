@@ -29,10 +29,8 @@ export const client = createClient({
   dataset,
   apiVersion,
   token: process.env.SANITY_VIEWER_TOKEN,
-  useCdn: process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_VERCEL_ENV !== 'preview',
-  perspective: process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview' ? 'previewDrafts' : 'published',
+  useCdn: true,
   stega: {
-    enabled: process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview',
     studioUrl: getStudioUrl(),
   },
 })

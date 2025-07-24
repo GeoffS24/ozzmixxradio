@@ -8,7 +8,6 @@ import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
 import { presentationTool } from 'sanity/presentation'
-import { previewOrigin } from '@/sanity/config/environment'
 
 export default defineConfig({
   basePath: '/studio',
@@ -20,11 +19,10 @@ export default defineConfig({
     visionTool({defaultApiVersion: apiVersion}),
      presentationTool({
       previewUrl: {
-        origin: previewOrigin,
-        preview: "/",
+       
         previewMode: {
-          enable: previewOrigin+"/api/draft-mode/enable",
-          disable: previewOrigin+"/api/draft-mode/disable",
+          enable: "/api/draft-mode/enable",
+          disable: "/api/draft-mode/disable",
         },
       },
     }),

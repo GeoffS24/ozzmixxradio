@@ -77,8 +77,8 @@ export default async function RootLayout({
         <SanityLive />
         {isDraftMode && (
           <>
-            <VisualEditing />
             <DisableDraftMode />
+            <VisualEditing />
           </>
         )}
       </main>
