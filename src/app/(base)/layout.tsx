@@ -3,7 +3,6 @@ import { Navigation } from "@/components/organisms/layout/header/navigation";
 import { Footer } from "@/components/organisms/layout/footer/footer";
 import { SanityLive } from "@/sanity/lib/live";
 import { draftMode } from "next/headers";
-import { VisualEditingWrapper } from "@/components/molecules/presentation/VisualEditingWrapper";
 import { DisableDraftMode } from "@/components/molecules/presentation/disableDraftMode";
 import { sanityFetch } from "@/sanity/lib/live";
 import { RADIO_STATION_QUERY } from "@/sanity/lib/queries/homeQueries";
@@ -11,6 +10,7 @@ import type { RadioStationData } from "@/types/sanity";
 import { AnalyticsScript } from "@/components/molecules/seo/AnalyticsScript";
 import { StructuredData } from "@/components/molecules/seo/StructuredData";
 import { urlFor } from "@/sanity/lib/image";
+import { VisualEditing } from "next-sanity";
 
 export async function generateMetadata(): Promise<Metadata> {
   const stationData = await sanityFetch({
@@ -77,7 +77,7 @@ export default async function RootLayout({
         <SanityLive />
         {isDraftMode && (
           <>
-            <VisualEditingWrapper />
+            <VisualEditing />
             <DisableDraftMode />
           </>
         )}
