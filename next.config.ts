@@ -15,16 +15,17 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      // Studio routes - allow embedding for visual editing
       {
-        source: '/studio/(.*)',
+        source: '/studio/:path*',
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
+            value: 'ALLOWALL'
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' https://*.sanity.studio https://ozz-ebon.vercel.app https://*.vercel.app"
+            value: "frame-ancestors *"
           },
           {
             key: 'X-Content-Type-Options',
@@ -32,8 +33,31 @@ const nextConfig: NextConfig = {
           }
         ],
       },
+      // API routes for draft mode
       {
-        source: '/((?!studio).*)',
+        source: '/api/draft-mode/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization'
+          }
+        ],
+      },
+      // All other routes
+      {
+        source: '/((?!studio|api/draft-mode).*)',
         headers: [
           {
             key: 'X-Frame-Options',
