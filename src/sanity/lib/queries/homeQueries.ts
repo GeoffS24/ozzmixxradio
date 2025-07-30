@@ -73,6 +73,80 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == 'homePage' && _id == 'hom
       },
       alt
     }
+  },
+  flashySections[] {
+    enabled,
+    sectionId,
+    style,
+    backgroundType,
+    backgroundImage {
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
+    backgroundVideo,
+    gradientColors {
+      from {
+        hex
+      },
+      to {
+        hex
+      },
+      direction
+    },
+    overlay {
+      enabled,
+      color {
+        hex
+      },
+      opacity
+    },
+    content {
+      badge,
+      title,
+      subtitle,
+      description,
+      buttons[] {
+        text,
+        url,
+        style
+      }
+    },
+    animation {
+      enabled,
+      type,
+      duration,
+      delay
+    }
+  },
+  googleAds {
+    enabled,
+    adClient,
+    adSlots[] {
+      name,
+      slotId,
+      format,
+      placement,
+      enabled,
+      showOnMobile,
+      showOnDesktop,
+      customCSS
+    },
+    settings {
+      lazyLoading,
+      refreshInterval,
+      testMode,
+      blockedCategories
+    },
+    analytics {
+      trackClicks,
+      trackImpressions,
+      customEvents[] {
+        name,
+        trigger
+      }
+    }
   }
 }`);
 

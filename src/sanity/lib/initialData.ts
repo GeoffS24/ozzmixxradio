@@ -46,6 +46,124 @@ export const initialHomePageData = {
     description: 'Have questions or want to get involved? We\'d love to hear from you!',
     emailRecipient: 'info@ozzradio.com',
   },
+
+  // Flashy Sections
+  flashySections: [
+    {
+      enabled: true,
+      sectionId: 'hero-cta',
+      style: 'cta',
+      backgroundType: 'gradient',
+      gradientColors: {
+        from: { hex: '#ff6b35' },
+        to: { hex: '#f7931e' },
+        direction: 'to-br',
+      },
+      overlay: {
+        enabled: false,
+      },
+      content: {
+        badge: 'Join the Beat',
+        title: 'Experience the Ultimate Dance Music Journey',
+        subtitle: 'Discover new tracks, enjoy live DJ sets, and connect with fellow music lovers.',
+        buttons: [
+          {
+            text: 'Listen Now',
+            url: '#music',
+            style: 'primary',
+          },
+          {
+            text: 'View Schedule',
+            url: '/schedule',
+            style: 'outline',
+          },
+        ],
+      },
+      animation: {
+        enabled: true,
+        type: 'fadeIn',
+        duration: 1000,
+        delay: 200,
+      },
+    },
+    {
+      enabled: true,
+      sectionId: 'stats-section',
+      style: 'stats',
+      backgroundType: 'image',
+      overlay: {
+        enabled: true,
+        color: { hex: '#000000' },
+        opacity: 60,
+      },
+      content: {
+        badge: 'Our Impact',
+        title: 'Broadcasting Excellence Since Day One',
+        subtitle: 'Join thousands of listeners who trust us for the best dance music experience.',
+      },
+      animation: {
+        enabled: true,
+        type: 'slideUp',
+        duration: 800,
+        delay: 0,
+      },
+    },
+  ],
+
+  // Google Ads Configuration
+  googleAds: {
+    enabled: false, // Disabled by default
+    adClient: '', // To be filled by user
+    adSlots: [
+      {
+        name: 'Header Banner',
+        slotId: '',
+        format: 'leaderboard',
+        placement: 'header',
+        enabled: false,
+        showOnMobile: false,
+        showOnDesktop: true,
+      },
+      {
+        name: 'Content Top',
+        slotId: '',
+        format: 'rectangle',
+        placement: 'content-top',
+        enabled: false,
+        showOnMobile: true,
+        showOnDesktop: true,
+      },
+      {
+        name: 'Sidebar',
+        slotId: '',
+        format: 'skyscraper',
+        placement: 'sidebar',
+        enabled: false,
+        showOnMobile: false,
+        showOnDesktop: true,
+      },
+      {
+        name: 'Content Bottom',
+        slotId: '',
+        format: 'large-rectangle',
+        placement: 'content-bottom',
+        enabled: false,
+        showOnMobile: true,
+        showOnDesktop: true,
+      },
+    ],
+    settings: {
+      lazyLoading: true,
+      refreshInterval: 0,
+      testMode: true, // Enable for development
+      blockedCategories: ['gambling', 'adult'],
+    },
+    analytics: {
+      trackClicks: true,
+      trackImpressions: true,
+      customEvents: [],
+    },
+  },
   appDownloadSection: {
     enabled: true,
     badge: 'Download App',

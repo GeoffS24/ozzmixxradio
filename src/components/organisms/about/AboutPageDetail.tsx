@@ -117,15 +117,16 @@ export function AboutPageDetail({ page }: AboutPageDetailProps) {
       {/* Team Section */}
       {teamSection?.enabled && teamSection.teamMembers && teamSection.teamMembers.length > 0 && (
         <section className="py-16 lg:py-20 bg-gray-50">
-          <div className="container mx-auto px-5">
+          <div className="container mx-auto w-full px-5 flex items-center justify-center flex-col">
             <SectionHeader
               badge="Team"
               title={teamSection.title || 'Meet Our Team'}
               description={teamSection.description || 'Get to know the passionate people behind OZZ Dance Radio.'}
               alignment="center"
+              className='w-full text-center'
             />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full">
               {teamSection.teamMembers.map((member, index) => (
                 <TeamMemberCard
                   key={index}

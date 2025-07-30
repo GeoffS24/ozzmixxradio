@@ -12,7 +12,7 @@ interface BlogCardProps {
 export function BlogCard({ image, tag, readTime, title, description }: BlogCardProps) {
   return (
     <div className="flex flex-col items-start gap-6 flex-1">
-      <div className="relative h-[221px] lg:h-auto w-full aspect-[335/221] lg:aspect-[1/0.67] overflow-hidden rounded-lg">
+      <div className="relative h-[221px] sm:h-[350px] lg:h-auto w-full lg:aspect-[1/0.67] overflow-hidden rounded-lg">
         <Image
           src={image}
           alt={title}

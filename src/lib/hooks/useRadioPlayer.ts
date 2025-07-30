@@ -3,11 +3,98 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Hls from 'hls.js'
 
+interface Song {
+  id: string
+  text: string
+  title: string
+  artist: string
+  album: string
+  art: string
+  genre: string
+  isrc: string
+  lyrics: string
+  custom_fields: any[]
+}
+
+interface NowPlaying {
+  sh_id: number
+  played_at: number
+  duration: number
+  elapsed: number
+  remaining: number
+  playlist: string
+  is_request: boolean
+  song: Song
+  streamer: string
+}
+
+interface PlayingNext {
+  cued_at: number
+  played_at: number
+  duration: number
+  playlist: string
+  is_request: boolean
+  song: Song
+}
+
+interface SongHistory {
+  sh_id: number
+  played_at: number
+  duration: number
+  playlist: string
+  is_request: boolean
+  song: Song
+  streamer: string
+}
+
+interface Station {
+  id: number
+  name: string
+  shortcode: string
+  description: string
+  frontend: string
+  backend: string
+  hls_enabled: boolean
+  hls_is_default: boolean
+  hls_listeners: number
+  hls_url: string
+  timezone: string
+  url: string
+  is_public: boolean
+  listen_url: string | null
+  playlist_m3u_url: string
+  playlist_pls_url: string
+  public_player_url: string
+  mounts: any[]
+  remotes: any[]
+}
+
+interface Live {
+  is_live: boolean
+  streamer_name: string
+  broadcast_start: string | null
+  art: string | null
+}
+
+interface Listeners {
+  total: number
+  unique: number
+  current: number
+}
+
 interface RadioStatus {
+  is_online?: boolean
+  listeners?: Listeners
+  live?: Live
+  now_playing?: NowPlaying
+  playing_next?: PlayingNext
+  song_history?: SongHistory[]
+  station?: Station
+  // Legacy fields for backward compatibility
   title?: string
   artist?: string
   album?: string
-  listeners?: number
+  art?: string
   bitrate?: string
   genre?: string
   server_description?: string
@@ -21,6 +108,13 @@ interface RadioPlayerState {
   currentTrack: RadioStatus | null
   error: string | null
   isConnected: boolean
+  nowPlaying: NowPlaying | null
+  playingNext: PlayingNext | null
+  songHistory: SongHistory[]
+  listeners: Listeners | null
+  isLive: boolean
+  streamerName: string
+  station: Station | null
 }
 
 interface UseRadioPlayerProps {
@@ -52,6 +146,13 @@ export function useRadioPlayer({
     currentTrack: null,
     error: null,
     isConnected: false,
+    nowPlaying: null,
+    playingNext: null,
+    songHistory: [],
+    listeners: null,
+    isLive: false,
+    streamerName: '',
+    station: null,
   })
 
   // Initialize audio element
@@ -182,11 +283,116 @@ export function useRadioPlayer({
 
       const data = await response.json()
 
-      // Parse the response based on common radio API formats
+      // Parse the response based on the new API format
       let trackInfo: RadioStatus = {}
 
-      if (Array.isArray(data) && data.length > 0) {
-        // New API format (array with station data)
+      // Check if it's the new API format (array with station data)
+      if (Array.isArray(data) && data.length > 0 && data[0].now_playing && data[0].station) {
+        // New API format - array with station data
+        const stationData = data[0]
+        const nowPlaying = stationData.now_playing
+        const playingNext = stationData.playing_next
+        const songHistory = stationData.song_history || []
+        const listeners = stationData.listeners
+        const live = stationData.live
+        const station = stationData.station
+
+        console.log('Radio Player - Parsed API data:', {
+          nowPlaying: nowPlaying?.song?.title,
+          artist: nowPlaying?.song?.artist,
+          art: nowPlaying?.song?.art,
+          playingNext: playingNext?.song?.title,
+          songHistoryCount: songHistory.length,
+          hls_url: station?.hls_url
+        })
+
+        // Build the complete track info
+        trackInfo = {
+          // New structured data
+          is_online: stationData.is_online || false,
+          listeners: listeners,
+          live: live,
+          now_playing: nowPlaying,
+          playing_next: playingNext,
+          song_history: songHistory,
+          station: station,
+
+          // Legacy fields for backward compatibility
+          title: nowPlaying?.song?.title || '',
+          artist: nowPlaying?.song?.artist || '',
+          album: nowPlaying?.song?.album || '',
+          art: nowPlaying?.song?.art || '',
+          genre: nowPlaying?.song?.genre || '',
+          server_description: station?.description || '',
+          stream_start: live?.broadcast_start || '',
+        }
+
+        // Update the extended state with new data
+        setState(prev => ({
+          ...prev,
+          currentTrack: trackInfo,
+          nowPlaying: nowPlaying,
+          playingNext: playingNext,
+          songHistory: songHistory,
+          listeners: listeners,
+          isLive: live?.is_live || false,
+          streamerName: live?.streamer_name || '',
+          station: station,
+        }))
+
+        // Update stream URL if we have HLS URL from station data
+        if (station?.hls_url && station.hls_url !== streamUrl) {
+          console.log('Updating stream URL from API:', station.hls_url)
+          // We could potentially update the stream URL here, but it's better to handle this at the component level
+        }
+
+        return // Exit early since we handled the new format
+      } else if (data.now_playing && data.station) {
+        // New API format - direct object (fallback)
+        const nowPlaying = data.now_playing
+        const playingNext = data.playing_next
+        const songHistory = data.song_history || []
+        const listeners = data.listeners
+        const live = data.live
+        const station = data.station
+
+        // Build the complete track info
+        trackInfo = {
+          // New structured data
+          is_online: data.is_online || false,
+          listeners: listeners,
+          live: live,
+          now_playing: nowPlaying,
+          playing_next: playingNext,
+          song_history: songHistory,
+          station: station,
+
+          // Legacy fields for backward compatibility
+          title: nowPlaying?.song?.title || '',
+          artist: nowPlaying?.song?.artist || '',
+          album: nowPlaying?.song?.album || '',
+          art: nowPlaying?.song?.art || '',
+          genre: nowPlaying?.song?.genre || '',
+          server_description: station?.description || '',
+          stream_start: live?.broadcast_start || '',
+        }
+
+        // Update the extended state with new data
+        setState(prev => ({
+          ...prev,
+          currentTrack: trackInfo,
+          nowPlaying: nowPlaying,
+          playingNext: playingNext,
+          songHistory: songHistory,
+          listeners: listeners,
+          isLive: live?.is_live || false,
+          streamerName: live?.streamer_name || '',
+          station: station,
+        }))
+
+        return // Exit early since we handled the new format
+      } else if (Array.isArray(data) && data.length > 0) {
+        // Legacy array format
         const stationData = data[0]
         const nowPlaying = stationData.now_playing
         const listeners = stationData.listeners

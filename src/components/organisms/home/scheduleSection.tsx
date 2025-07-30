@@ -33,16 +33,39 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   const [stationTime, setStationTime] = useState<Date>(new Date());
 
   // Get station timezone from schedule data, default to Melbourne
-  const stationTimezone = scheduleData?.timezone?.trim() || 'Australia/Melbourne';
+  // Clean and validate timezone string
+  const rawTimezone = scheduleData?.timezone?.trim() || 'Australia/Melbourne';
+  const stationTimezone = rawTimezone.replace(/,\s*Australia$/, '').trim() || 'Australia/Melbourne';
+
+  console.log('Timezone processing:', {
+    raw: scheduleData?.timezone,
+    cleaned: stationTimezone,
+    isValid: Intl.supportedValuesOf('timeZone').includes(stationTimezone)
+  });
 
   useEffect(() => {
     const updateTimes = () => {
       const now = new Date();
 
       try {
-        // Convert current time to station timezone
-        const stationNow = new Date(now.toLocaleString("en-US", { timeZone: stationTimezone }));
+        // Validate timezone first
+        const validTimezone = Intl.supportedValuesOf('timeZone').includes(stationTimezone)
+          ? stationTimezone
+          : 'Australia/Melbourne';
+
+        // Get the current time in the station timezone
+        const stationNow = new Date(now.toLocaleString("en-US", { timeZone: validTimezone }));
         setStationTime(stationNow);
+
+        console.log('Timezone update:', {
+          localTime: now.toLocaleString(),
+          rawTimezone: scheduleData?.timezone,
+          cleanedTimezone: stationTimezone,
+          validTimezone,
+          stationTime: stationNow.toLocaleString(),
+          dayIndex: stationNow.getDay(),
+          dayName: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][stationNow.getDay()]
+        });
       } catch (error) {
         console.warn('Invalid timezone:', stationTimezone, 'falling back to local time');
         setStationTime(now);
@@ -66,9 +89,11 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
     sunday: "Sunday",
   };
 
+  // Fix day calculation: getDay() returns 0=Sunday, 1=Monday, etc.
+  // We need to map this to our dayNames object keys
+  const dayMapping = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const currentDayIndex = stationTime.getDay();
-  const currentDayName =
-    Object.keys(dayNames)[currentDayIndex === 0 ? 6 : currentDayIndex - 1];
+  const currentDayName = dayMapping[currentDayIndex];
 
   useEffect(() => {
     setActiveDay(currentDayName);
@@ -89,13 +114,35 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   const isCurrentShow = (timeSlot: TimeSlot) => {
     if (!sectionData.showCurrentTime) return false;
 
-    const now = stationTime;
-    const currentTimeString = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    try {
+      // Get current time in station timezone
+      const now = new Date();
+      const validTimezone = Intl.supportedValuesOf('timeZone').includes(stationTimezone)
+        ? stationTimezone
+        : 'Australia/Melbourne';
 
-    return (
-      currentTimeString >= timeSlot.startTime &&
-      currentTimeString < timeSlot.endTime
-    );
+      const stationNow = new Date(now.toLocaleString("en-US", { timeZone: validTimezone }));
+      const currentTimeString = `${stationNow.getHours().toString().padStart(2, "0")}:${stationNow.getMinutes().toString().padStart(2, "0")}`;
+
+      const isLive = currentTimeString >= timeSlot.startTime && currentTimeString < timeSlot.endTime;
+
+      if (isLive) {
+        console.log('Live show detected:', {
+          showName: timeSlot.showName,
+          startTime: timeSlot.startTime,
+          endTime: timeSlot.endTime,
+          currentTime: currentTimeString,
+          stationTime: stationNow.toLocaleString(),
+          dayName: currentDayName,
+          timezone: validTimezone
+        });
+      }
+
+      return isLive;
+    } catch (error) {
+      console.warn('Error checking current show:', error);
+      return false;
+    }
   };
 
   if (!sectionData.enabled) {
@@ -119,18 +166,43 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
             <span className="font-medium text-primary">
               {(() => {
                 try {
-                  return stationTime.toLocaleTimeString([], {
+                  // Validate timezone first
+                  if (!Intl.supportedValuesOf('timeZone').includes(stationTimezone)) {
+                    console.warn('Unsupported timezone:', stationTimezone, 'using Australia/Melbourne');
+                    const now = new Date();
+                    return now.toLocaleTimeString('en-AU', {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZone: 'Australia/Melbourne',
+                      timeZoneName: "short",
+                    });
+                  }
+
+                  // Get current time in station timezone
+                  const now = new Date();
+                  return now.toLocaleTimeString('en-AU', {
                     hour: "2-digit",
                     minute: "2-digit",
                     timeZone: stationTimezone,
                     timeZoneName: "short",
                   });
                 } catch (error) {
-                  return stationTime.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZoneName: "short",
-                  });
+                  console.warn('Timezone display error:', error);
+                  // Fallback to Melbourne time
+                  const now = new Date();
+                  try {
+                    return now.toLocaleTimeString('en-AU', {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZone: 'Australia/Melbourne',
+                      timeZoneName: "short",
+                    });
+                  } catch (fallbackError) {
+                    return stationTime.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    });
+                  }
                 }
               })()}
             </span>

@@ -4,6 +4,8 @@ import { Hero } from "@/components/organisms/home/Hero";
 import { MusicSection } from "@/components/organisms/home/MusicSection";
 import { ScheduleSection } from "@/components/organisms/home/scheduleSection";
 import { AppDownloadSection } from "@/components/organisms/home/AppDownloadSection";
+import { FlashySection } from "@/components/organisms/home/FlashySection";
+import { AdsManager } from "@/components/organisms/ads/AdsManager";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HOME_PAGE_QUERY, SCHEDULE_QUERY, POSTS_QUERY, RADIO_STATION_QUERY } from "@/sanity/lib/queries/homeQueries";
 import type { HomePageData, ScheduleData, BlogPost, RadioStationData } from "@/types/sanity";
@@ -33,17 +35,45 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background ">
       <Hero data={homePage?.heroSection} />
+
+      {/* Ad Placement - Header */}
+      <AdsManager adsData={homePage?.googleAds} placement="header" />
+
       <MusicSection
         data={homePage?.musicSection}
         radioStationData={radioStation}
       />
+
+      {/* Ad Placement - Content Top */}
+      <AdsManager adsData={homePage?.googleAds} placement="content-top" />
+
+      {/* Flashy Sections */}
+      {homePage?.flashySections?.map((section, index) => (
+        <FlashySection key={index} data={section} />
+      ))}
+
+      {/* Ad Placement - Content Middle */}
+      <AdsManager adsData={homePage?.googleAds} placement="content-middle" />
+
       <ScheduleSection
         data={homePage?.scheduleSection}
         scheduleData={schedule}
       />
+
+      {/* Ad Placement - Between Sections */}
+      <AdsManager adsData={homePage?.googleAds} placement="between-sections" />
+
       <BlogSection data={homePage?.blogSection} posts={posts || []} />
+
       <AppDownloadSection data={homePage?.appDownloadSection} />
+
+      {/* Ad Placement - Content Bottom */}
+      <AdsManager adsData={homePage?.googleAds} placement="content-bottom" />
+
       <ContactSection data={homePage?.contactSection} />
+
+      {/* Ad Placement - Footer */}
+      <AdsManager adsData={homePage?.googleAds} placement="footer" />
     </div>
   );
 }

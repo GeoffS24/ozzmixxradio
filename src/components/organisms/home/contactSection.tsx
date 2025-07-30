@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { ChevronDown, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { Button } from '@/components/atoms/ui/Button'
+import { initEmailJS, validateEmailJSConfig } from '@/lib/services/emailjs'
 import type { ContactSectionData } from '@/types/sanity'
 
 interface ContactSectionProps {
@@ -32,6 +33,23 @@ export function ContactSection({ data }: ContactSectionProps) {
   })
 
   const [isTopicOpen, setIsTopicOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null
+    message: string
+  }>({ type: null, message: '' })
+  const [emailConfigValid, setEmailConfigValid] = useState(false)
+
+  // Initialize EmailJS and check configuration
+  useEffect(() => {
+    initEmailJS()
+    const config = validateEmailJSConfig()
+    setEmailConfigValid(config.isValid)
+
+    if (!config.isValid) {
+      console.warn('EmailJS configuration incomplete:', config.missingFields)
+    }
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
@@ -45,10 +63,58 @@ export function ContactSection({ data }: ContactSectionProps) {
     setFormData(prev => ({ ...prev, userType: type }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // TODO: Implement form submission to emailRecipient
+
+    // Reset status
+    setSubmitStatus({ type: null, message: '' })
+    setIsSubmitting(true)
+
+    try {
+      // Submit form data to API
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setSubmitStatus({
+          type: 'success',
+          message: result.message || 'Thank you! Your message has been sent successfully.'
+        })
+
+        // Reset form on success
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          topic: '',
+          userType: '',
+          message: '',
+          acceptTerms: false
+        })
+        setIsTopicOpen(false)
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: result.error || 'Failed to send message. Please try again.'
+        })
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setSubmitStatus({
+        type: 'error',
+        message: 'Network error. Please check your connection and try again.'
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (!sectionData.enabled) {
@@ -56,7 +122,7 @@ export function ContactSection({ data }: ContactSectionProps) {
   }
 
   return (
-    <section className="flex py-16 px-5 flex-col items-center gap-8 bg-white">
+    <section id='join' className="flex py-16 px-5 flex-col items-center gap-8 bg-white">
       <div className="flex container mx-auto flex-col items-center gap-8 w-full">
         <SectionHeader
           badge={sectionData.badge}
@@ -180,7 +246,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     value="listener"
                     checked={formData.userType === 'listener'}
                     onChange={() => handleUserTypeChange('listener')}
-                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted"
+                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted accent-primary"
                   />
                   <label htmlFor="listener" className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
                     Listener
@@ -194,7 +260,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     value="advertiser"
                     checked={formData.userType === 'advertiser'}
                     onChange={() => handleUserTypeChange('advertiser')}
-                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted"
+                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted accent-primary"
                   />
                   <label htmlFor="advertiser" className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
                     Advertiser
@@ -210,7 +276,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     value="artist"
                     checked={formData.userType === 'artist'}
                     onChange={() => handleUserTypeChange('artist')}
-                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted"
+                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted accent-primary"
                   />
                   <label htmlFor="artist" className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
                     Artist
@@ -224,7 +290,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     value="sponsor"
                     checked={formData.userType === 'sponsor'}
                     onChange={() => handleUserTypeChange('sponsor')}
-                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted"
+                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted accent-primary"
                   />
                   <label htmlFor="sponsor" className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
                     Sponsor
@@ -240,7 +306,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     value="other-inquiry"
                     checked={formData.userType === 'other-inquiry'}
                     onChange={() => handleUserTypeChange('other-inquiry')}
-                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted"
+                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted accent-primary"
                   />
                   <label htmlFor="other-inquiry" className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
                     Other Inquiry
@@ -254,7 +320,7 @@ export function ContactSection({ data }: ContactSectionProps) {
                     value="other"
                     checked={formData.userType === 'other'}
                     onChange={() => handleUserTypeChange('other')}
-                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted"
+                    className="w-4.5 h-4.5 rounded-full border border-border bg-muted accent-primary"
                   />
                   <label htmlFor="other" className="text-sm lg:text-base font-normal leading-[150%] text-foreground">
                     Other
@@ -287,19 +353,53 @@ export function ContactSection({ data }: ContactSectionProps) {
               name="acceptTerms"
               checked={formData.acceptTerms}
               onChange={handleInputChange}
-              className="w-4.5 h-4.5 border border-border bg-muted"
+              className="w-4.5 h-4.5 border border-border bg-muted accent-primary"
             />
             <label htmlFor="terms" className="text-xs lg:text-sm font-normal leading-[150%] text-foreground">
               I accept the Terms
             </label>
           </div>
 
+          {/* Status Message */}
+          {submitStatus.type && (
+            <div className={`flex items-center gap-2 p-4 rounded-lg w-full ${
+              submitStatus.type === 'success'
+                ? 'bg-green-50 text-green-800 border border-green-200'
+                : 'bg-red-50 text-red-800 border border-red-200'
+            }`}>
+              {submitStatus.type === 'success' ? (
+                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              )}
+              <span className="text-sm">{submitStatus.message}</span>
+            </div>
+          )}
+
+          {/* Configuration Warning */}
+          {!emailConfigValid && (
+            <div className="flex items-center gap-2 p-3 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg w-full">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span className="text-xs">
+                Email configuration incomplete. Messages will be saved but may not be delivered.
+              </span>
+            </div>
+          )}
+
           {/* Submit Button */}
           <Button
             type="submit"
-            className="flex px-6 py-2.5 justify-center items-center gap-2 border border-persimmon bg-persimmon text-sm lg:text-base font-medium text-white hover:bg-persimmon-600 transition-colors"
+            disabled={isSubmitting}
+            className="flex px-6 py-2.5 justify-center items-center gap-2 border border-persimmon bg-persimmon text-sm lg:text-base font-medium text-white hover:bg-persimmon-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Submit
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              'Submit'
+            )}
           </Button>
         </form>
       </div>

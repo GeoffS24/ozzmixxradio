@@ -291,6 +291,23 @@ export const homePageType = defineType({
       ],
     }),
 
+    // Flashy Sections
+    defineField({
+      name: 'flashySections',
+      title: 'Flashy Sections',
+      type: 'array',
+      of: [{ type: 'flashySection' }],
+      description: 'Add engaging sections with cool backgrounds and animations',
+    }),
+
+    // Google Ads Configuration
+    defineField({
+      name: 'googleAds',
+      title: 'Google Ads',
+      type: 'googleAds',
+      description: 'Configure Google AdSense ads for the homepage',
+    }),
+
     // App Download Section
     defineField({
       name: 'appDownloadSection',

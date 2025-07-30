@@ -9,6 +9,9 @@ import {homePageType} from './homePageType'
 import {aboutPageType} from './aboutPageType'
 import {radioStationType} from './radioStationType'
 import {legalPageType} from './legalPageType'
+import {flashySectionType} from './flashySectionType'
+import {googleAdsType} from './googleAdsType'
+import {contactSubmissionType} from './contactSubmissionType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -26,5 +29,12 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     scheduleType,
     radioStationType,
     legalPageType,
+
+    // Component types
+    flashySectionType,
+    googleAdsType,
+
+    // Form submissions
+    contactSubmissionType,
   ],
 }

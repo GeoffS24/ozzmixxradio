@@ -30,6 +30,13 @@ export function RadioPlayer({
     currentTrack,
     error,
     isConnected,
+    nowPlaying,
+    playingNext,
+    songHistory,
+    listeners,
+    isLive,
+    streamerName,
+    station,
     togglePlay,
     volumeUp,
     volumeDown,
@@ -132,8 +139,13 @@ export function RadioPlayer({
             <span className="px-2 py-1 bg-muted rounded-full">
               {currentTrack.genre}
             </span>
-            {showListenerCount && currentTrack.listeners && (
-              <span>{currentTrack.listeners} listeners</span>
+            {showListenerCount && (
+              <span>
+                {typeof currentTrack?.listeners === 'number'
+                  ? currentTrack.listeners
+                  : (currentTrack?.listeners as any)?.current || (currentTrack?.listeners as any)?.total || 0
+                } listeners
+              </span>
             )}
           </div>
         )}

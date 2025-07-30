@@ -130,8 +130,47 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
+      // Contact Form Submissions
+      S.listItem()
+        .title('📧 Contact Submissions')
+        .child(
+          S.list()
+            .title('Contact Form Submissions')
+            .items([
+              S.documentTypeListItem('contactSubmission')
+                .title('All Submissions'),
+              S.divider(),
+              S.listItem()
+                .title('New Submissions')
+                .child(
+                  S.documentList()
+                    .title('New Submissions')
+                    .filter('_type == "contactSubmission" && status == "new"')
+                    .defaultOrdering([{ field: 'submissionDate', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('In Progress')
+                .child(
+                  S.documentList()
+                    .title('In Progress')
+                    .filter('_type == "contactSubmission" && status == "in-progress"')
+                    .defaultOrdering([{ field: 'submissionDate', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Resolved')
+                .child(
+                  S.documentList()
+                    .title('Resolved')
+                    .filter('_type == "contactSubmission" && status == "resolved"')
+                    .defaultOrdering([{ field: 'submissionDate', direction: 'desc' }])
+                ),
+            ])
+        ),
+
+      S.divider(),
+
       // Other document types (if any)
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'author', 'homePage', 'schedule', 'radioStation', 'legalPage'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'author', 'homePage', 'aboutPage', 'schedule', 'radioStation', 'legalPage', 'contactSubmission'].includes(item.getId()!),
       ),
     ])

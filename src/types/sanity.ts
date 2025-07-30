@@ -35,6 +35,8 @@ export interface HomePageData {
   blogSection?: BlogSectionData
   contactSection?: ContactSectionData
   appDownloadSection?: AppDownloadSectionData
+  flashySections?: FlashySectionData[]
+  googleAds?: GoogleAdsData
 }
 
 export interface HeroSectionData {
@@ -191,6 +193,73 @@ export interface RadioConfig {
   defaultVolume?: number
   autoPlay?: boolean
   showListenerCount?: boolean
+}
+
+// Flashy Section Types
+export interface FlashySectionData {
+  enabled?: boolean
+  sectionId?: string
+  style?: string
+  backgroundType?: string
+  backgroundImage?: SanityImage
+  backgroundVideo?: string
+  gradientColors?: {
+    from?: { hex: string }
+    to?: { hex: string }
+    direction?: string
+  }
+  overlay?: {
+    enabled?: boolean
+    color?: { hex: string }
+    opacity?: number
+  }
+  content?: {
+    badge?: string
+    title?: string
+    subtitle?: string
+    description?: any[]
+    buttons?: Array<{
+      text: string
+      url: string
+      style: string
+    }>
+  }
+  animation?: {
+    enabled?: boolean
+    type?: string
+    duration?: number
+    delay?: number
+  }
+}
+
+// Google Ads Types
+export interface GoogleAdsData {
+  enabled?: boolean
+  adClient?: string
+  adSlots?: Array<{
+    name: string
+    slotId: string
+    format: string
+    placement: string
+    enabled: boolean
+    showOnMobile: boolean
+    showOnDesktop: boolean
+    customCSS?: string
+  }>
+  settings?: {
+    lazyLoading?: boolean
+    refreshInterval?: number
+    testMode?: boolean
+    blockedCategories?: string[]
+  }
+  analytics?: {
+    trackClicks?: boolean
+    trackImpressions?: boolean
+    customEvents?: Array<{
+      name: string
+      trigger: string
+    }>
+  }
 }
 
 export interface ContactInfo {
