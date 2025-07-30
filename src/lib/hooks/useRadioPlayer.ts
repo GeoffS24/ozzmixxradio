@@ -163,51 +163,39 @@ export function useRadioPlayer({
       audioRef.current.preload = 'none'
       audioRef.current.volume = defaultVolume / 100
 
-      // Try without crossOrigin first for better compatibility
-      // audioRef.current.crossOrigin = 'anonymous'
 
-      // Add additional attributes for better streaming support
       audioRef.current.setAttribute('controls', 'false')
       audioRef.current.setAttribute('autoplay', 'false')
 
-      console.log('Audio element initialized')
 
-      // Audio event listeners
       const audio = audioRef.current
 
       const handleLoadStart = () => {
-        console.log('Audio load started')
         setState(prev => ({ ...prev, isLoading: true, error: null }))
       }
 
       const handleCanPlay = () => {
-        console.log('Audio can play')
         setState(prev => ({ ...prev, isLoading: false, isConnected: true }))
       }
 
       const handlePlay = () => {
-        console.log('Audio playing')
         setState(prev => ({ ...prev, isPlaying: true, isLoading: false }))
       }
 
       const handlePause = () => {
-        console.log('Audio paused')
         setState(prev => ({ ...prev, isPlaying: false }))
       }
 
       const handleWaiting = () => {
-        console.log('Audio waiting/buffering')
         setState(prev => ({ ...prev, isLoading: true }))
       }
 
       const handlePlaying = () => {
-        console.log('Audio resumed playing')
         setState(prev => ({ ...prev, isLoading: false, isPlaying: true }))
       }
 
       const handleError = (e: Event) => {
         const error = (e.target as HTMLAudioElement)?.error
-        console.error('Audio error:', error, 'Event:', e)
         
         let errorMessage = 'Failed to load radio stream'
         
@@ -240,7 +228,6 @@ export function useRadioPlayer({
       }
 
       const handleLoadedMetadata = () => {
-        console.log('Audio metadata loaded')
         setState(prev => ({ ...prev, isConnected: true }))
       }
 
@@ -297,14 +284,6 @@ export function useRadioPlayer({
         const live = stationData.live
         const station = stationData.station
 
-        console.log('Radio Player - Parsed API data:', {
-          nowPlaying: nowPlaying?.song?.title,
-          artist: nowPlaying?.song?.artist,
-          art: nowPlaying?.song?.art,
-          playingNext: playingNext?.song?.title,
-          songHistoryCount: songHistory.length,
-          hls_url: station?.hls_url
-        })
 
         // Build the complete track info
         trackInfo = {
@@ -342,7 +321,6 @@ export function useRadioPlayer({
 
         // Update stream URL if we have HLS URL from station data
         if (station?.hls_url && station.hls_url !== streamUrl) {
-          console.log('Updating stream URL from API:', station.hls_url)
           // We could potentially update the stream URL here, but it's better to handle this at the component level
         }
 
@@ -459,7 +437,6 @@ export function useRadioPlayer({
   // Player controls
   const play = useCallback(async () => {
     if (!audioRef.current) {
-      console.error('Audio element not initialized')
       return
     }
 
@@ -470,7 +447,6 @@ export function useRadioPlayer({
       // Check if we already have an HLS instance and audio source
       if (hlsRef.current && audioRef.current.src) {
         // Resume existing stream
-        console.log('Resuming existing stream')
         await audioRef.current.play()
         return
       }
@@ -489,7 +465,6 @@ export function useRadioPlayer({
 
       if (isHLS && Hls.isSupported()) {
         // Use HLS.js for HLS streams
-        console.log('Using HLS.js for HLS stream')
         const hls = new Hls({
           enableWorker: true,
           lowLatencyMode: true,
@@ -501,12 +476,10 @@ export function useRadioPlayer({
         hls.attachMedia(audioRef.current)
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          console.log('HLS manifest parsed, starting playback')
           audioRef.current?.play()
         })
 
         hls.on(Hls.Events.ERROR, (event, data) => {
-          console.error('HLS error:', data)
           if (data.fatal) {
             setState(prev => ({
               ...prev,
@@ -518,18 +491,15 @@ export function useRadioPlayer({
         })
       } else if (isHLS && audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
         // Native HLS support (Safari)
-        console.log('Using native HLS support')
         audioRef.current.src = streamUrl
         await audioRef.current.play()
       } else {
         // Regular audio stream (MP3, AAC, etc.)
-        console.log('Using regular audio element')
         audioRef.current.src = streamUrl
         await audioRef.current.play()
       }
 
     } catch (error) {
-      console.error('Play failed with exception:', error)
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -542,7 +512,6 @@ export function useRadioPlayer({
   const pause = useCallback(() => {
     if (!audioRef.current) return
 
-    console.log('Pausing audio')
     audioRef.current.pause()
 
     // Don't destroy HLS instance - just pause the audio
@@ -550,12 +519,7 @@ export function useRadioPlayer({
   }, [])
 
   const togglePlay = useCallback(() => {
-    console.log('Toggle play called, current state:', {
-      isPlaying: state.isPlaying,
-      isLoading: state.isLoading,
-      hasHLS: !!hlsRef.current,
-      hasAudioSrc: !!audioRef.current?.src
-    })
+  
 
     if (state.isPlaying) {
       pause()
@@ -586,7 +550,6 @@ export function useRadioPlayer({
     return () => {
       // Clean up HLS when stream URL changes
       if (hlsRef.current) {
-        console.log('Cleaning up HLS instance due to stream URL change')
         hlsRef.current.destroy()
         hlsRef.current = null
       }

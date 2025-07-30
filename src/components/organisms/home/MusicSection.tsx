@@ -53,13 +53,6 @@ export function MusicSection({ data, radioStationData }: MusicSectionProps) {
     autoPlay: radioStationData?.radioConfig?.autoPlay ?? false,
   })
 
-  console.log('Radio Player Data:', {
-    nowPlaying: radioPlayerData.nowPlaying,
-    playingNext: radioPlayerData.playingNext,
-    songHistory: radioPlayerData.songHistory,
-    songHistoryLength: radioPlayerData.songHistory?.length
-  })
-
   if (!sectionData.enabled) {
     return null
   }
@@ -74,30 +67,40 @@ export function MusicSection({ data, radioStationData }: MusicSectionProps) {
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating Music Notes */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-primary/10"
-            initial={{ y: "100vh", x: Math.random() * 100 + "%", rotate: 0 }}
-            animate={{
-              y: "-100vh",
-              rotate: 360,
-              x: [
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%"
-              ]
-            }}
-            transition={{
-              duration: 15 + Math.random() * 10,
-              repeat: Infinity,
-              ease: "linear",
-              delay: i * 2
-            }}
-          >
-            <Music className="w-8 h-8" />
-          </motion.div>
-        ))}
+        {[...Array(6)].map((_, i) => {
+          // Use deterministic values based on index to avoid hydration mismatch
+          const baseX = (i * 17 + 13) % 100; // Deterministic starting position
+          const path1 = (i * 23 + 7) % 100;  // Deterministic path points
+          const path2 = (i * 31 + 19) % 100;
+          const path3 = (i * 37 + 11) % 100;
+          const duration = 15 + (i * 3) % 10; // Deterministic duration
+
+          return (
+            <motion.div
+              key={i}
+              className="absolute text-primary/10"
+              initial={{ y: "100vh", x: baseX + "%", rotate: 0 }}
+              animate={{
+                y: "-100vh",
+                rotate: 360,
+                x: [
+                  baseX + "%",
+                  path1 + "%",
+                  path2 + "%",
+                  path3 + "%"
+                ]
+              }}
+              transition={{
+                duration: duration,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 2
+              }}
+            >
+              <Music className="w-8 h-8" />
+            </motion.div>
+          )
+        })}
 
         {/* Gradient Orbs */}
         <motion.div

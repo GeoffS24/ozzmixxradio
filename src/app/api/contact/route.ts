@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sendContactEmail, type ContactFormData } from '@/lib/services/emailjs'
 import { saveContactSubmission, getClientIP, getUserAgent } from '@/lib/services/sanity-contact'
-import { sanityFetch } from '@/sanity/lib/live'
 import { RADIO_STATION_QUERY } from '@/sanity/lib/queries/homeQueries'
 import type { RadioStationData } from '@/types/sanity'
+import { client } from '@/sanity/lib/client'
+
+// Contact form data interface (moved from emailjs service)
+export interface ContactFormData {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  topic: string
+  userType: string
+  message: string
+  acceptTerms: boolean
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,38 +46,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get recipient email from Sanity
-    const stationData = await sanityFetch({
-      query: RADIO_STATION_QUERY,
-    })
-
-    const station = stationData.data as RadioStationData | null
+    // Get recipient email from Sanity (for frontend EmailJS use)
+    const station = await client.fetch(RADIO_STATION_QUERY) as RadioStationData | null
     const recipientEmail = station?.contactInfo?.email || 'info@ozzradio.com'
 
     // Get client information
     const clientIP = getClientIP(request)
     const userAgent = getUserAgent(request)
 
-    // Send email via EmailJS
-    let emailSent = false
-    let emailError = ''
-
-    try {
-      const emailResult = await sendContactEmail(formData, recipientEmail)
-      emailSent = emailResult.success
-      if (!emailResult.success) {
-        emailError = emailResult.error || 'Unknown email error'
-        console.error('Email sending failed:', emailError)
-      }
-    } catch (error) {
-      console.error('Email sending error:', error)
-      emailError = error instanceof Error ? error.message : 'Email service error'
-    }
-
-    // Save to Sanity (regardless of email success)
+    // Save to Sanity (server-side only)
     const sanityResult = await saveContactSubmission(
       formData,
-      emailSent,
+      false, // Email will be sent from frontend
       {
         ipAddress: clientIP,
         userAgent: userAgent,
@@ -75,54 +66,32 @@ export async function POST(request: NextRequest) {
 
     if (!sanityResult.success) {
       console.error('Failed to save to Sanity:', sanityResult.error)
-      // Still return success if email was sent, but log the error
-      if (emailSent) {
-        return NextResponse.json({
-          success: true,
-          message: 'Message sent successfully, but failed to save to database',
-          emailSent: true,
-          savedToDatabase: false,
-        })
-      } else {
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: 'Failed to send email and save to database',
-            details: {
-              emailError,
-              sanityError: sanityResult.error
-            }
-          },
-          { status: 500 }
-        )
-      }
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to save to database',
+          details: {
+            sanityError: sanityResult.error
+          }
+        },
+        { status: 500 }
+      )
     }
 
-    // Return success response
-    if (emailSent) {
-      return NextResponse.json({
-        success: true,
-        message: 'Message sent successfully!',
-        emailSent: true,
-        savedToDatabase: true,
-        submissionId: sanityResult.id,
-      })
-    } else {
-      return NextResponse.json({
-        success: true,
-        message: 'Message saved successfully, but email delivery failed. We will contact you soon.',
-        emailSent: false,
-        savedToDatabase: true,
-        submissionId: sanityResult.id,
-        emailError,
-      })
-    }
+    // Return success with recipient email for frontend EmailJS
+    return NextResponse.json({
+      success: true,
+      message: 'Contact submission saved successfully',
+      savedToDatabase: true,
+      submissionId: sanityResult.id,
+      recipientEmail: recipientEmail, // For frontend EmailJS
+    })
 
   } catch (error) {
     console.error('Contact form submission error:', error)
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error'
       },

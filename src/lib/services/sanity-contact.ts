@@ -1,5 +1,18 @@
-import { client } from '@/sanity/lib/client'
-import type { ContactFormData } from './emailjs'
+import { writeClient } from '@/sanity/lib/client'
+import { createClient } from 'next-sanity'
+import { apiVersion, dataset, projectId } from '@/sanity/env'
+
+// Contact form data interface
+export interface ContactFormData {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  topic: string
+  userType: string
+  message: string
+  acceptTerms: boolean
+}
 
 // Interface for contact submission data
 export interface ContactSubmissionData extends Omit<ContactFormData, 'acceptTerms'> {
@@ -22,8 +35,28 @@ export const saveContactSubmission = async (
   }
 ): Promise<{ success: boolean; id?: string; error?: string }> => {
   try {
+    console.log('🔧 Attempting to save contact submission to Sanity...')
+
+    // Create a fresh client with explicit configuration
+    const sanityWriteClient = createClient({
+      projectId,
+      dataset,
+      apiVersion,
+      token: process.env.SANITY_VIEWER_TOKEN,
+      useCdn: false,
+
+    })
+
+    console.log('🔧 Created fresh Sanity client with token:', {
+      projectId,
+      dataset,
+      apiVersion,
+      hasToken: !!process.env.SANITY_VIEWER_TOKEN,
+      tokenLength: process.env.SANITY_VIEWER_TOKEN?.length || 0
+    })
+
     // Prepare submission data
-    const submissionData: Omit<ContactSubmissionData, 'id'> = {
+    const submissionData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
@@ -31,7 +64,7 @@ export const saveContactSubmission = async (
       topic: formData.topic || 'general',
       userType: formData.userType || 'other',
       message: formData.message,
-      acceptTerms: formData.acceptTerms,
+      acceptedTerms: formData.acceptTerms, // ✅ Fixed field name to match schema
       submissionDate: new Date().toISOString(),
       status: 'new',
       emailSent,
@@ -39,11 +72,21 @@ export const saveContactSubmission = async (
       userAgent: additionalData?.userAgent,
     }
 
+    console.log('📝 Submission data prepared:', {
+      firstName: submissionData.firstName,
+      email: submissionData.email,
+      topic: submissionData.topic,
+      dataKeys: Object.keys(submissionData)
+    })
+
     // Create document in Sanity
-    const result = await client.create({
+    console.log('📝 Creating document in Sanity...')
+    const result = await sanityWriteClient.create({
       _type: 'contactSubmission',
       ...submissionData,
     })
+
+    console.log('✅ Successfully saved to Sanity:', result._id)
 
     return {
       success: true,
@@ -70,7 +113,7 @@ export const updateContactSubmissionStatus = async (
       updateData.notes = notes
     }
 
-    await client.patch(id).set(updateData).commit()
+    await writeClient.patch(id).set(updateData).commit()
 
     return { success: true }
   } catch (error) {
@@ -96,7 +139,7 @@ export const getContactSubmissions = async (
     
     query += ` | order(submissionDate desc)[0...${limit}]`
 
-    const submissions = await client.fetch(query)
+    const submissions = await writeClient.fetch(query)
 
     return {
       success: true,

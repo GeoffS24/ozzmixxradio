@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { ChevronDown, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { Button } from '@/components/atoms/ui/Button'
-import { initEmailJS, validateEmailJSConfig } from '@/lib/services/emailjs'
+import { useContactForm } from '@/lib/hooks/useContactForm'
+import { validateEmailJSConfig } from '@/lib/services/emailjs'
 import type { ContactSectionData } from '@/types/sanity'
 
 interface ContactSectionProps {
@@ -33,16 +34,17 @@ export function ContactSection({ data }: ContactSectionProps) {
   })
 
   const [isTopicOpen, setIsTopicOpen] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<{
     type: 'success' | 'error' | null
     message: string
   }>({ type: null, message: '' })
   const [emailConfigValid, setEmailConfigValid] = useState(false)
 
-  // Initialize EmailJS and check configuration
+  // Use the contact form hook
+  const { isSubmitting, submitForm } = useContactForm()
+
+  // Check EmailJS configuration
   useEffect(() => {
-    initEmailJS()
     const config = validateEmailJSConfig()
     setEmailConfigValid(config.isValid)
 
@@ -68,24 +70,15 @@ export function ContactSection({ data }: ContactSectionProps) {
 
     // Reset status
     setSubmitStatus({ type: null, message: '' })
-    setIsSubmitting(true)
 
     try {
-      // Submit form data to API
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      const result = await response.json()
+      // Use the contact form hook to submit
+      const result = await submitForm(formData)
 
       if (result.success) {
         setSubmitStatus({
           type: 'success',
-          message: result.message || 'Thank you! Your message has been sent successfully.'
+          message: result.message
         })
 
         // Reset form on success
@@ -103,7 +96,7 @@ export function ContactSection({ data }: ContactSectionProps) {
       } else {
         setSubmitStatus({
           type: 'error',
-          message: result.error || 'Failed to send message. Please try again.'
+          message: result.message
         })
       }
     } catch (error) {
@@ -112,8 +105,6 @@ export function ContactSection({ data }: ContactSectionProps) {
         type: 'error',
         message: 'Network error. Please check your connection and try again.'
       })
-    } finally {
-      setIsSubmitting(false)
     }
   }
 

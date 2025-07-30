@@ -48,14 +48,7 @@ export function SimpleRadioPlayer({
     volumeDown,
   } = radioPlayerData
 
-  // Debug logging
-  console.log('SimpleRadioPlayer state:', {
-    isPlaying,
-    isLoading,
-    volume,
-    hasTogglePlay: !!togglePlay,
-    hasVolumeControls: !!(volumeUp && volumeDown)
-  })
+
 
   const getVolumeIcon = () => {
     if (volume === 0) return VolumeX

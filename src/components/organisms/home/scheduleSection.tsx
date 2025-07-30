@@ -37,11 +37,7 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   const rawTimezone = scheduleData?.timezone?.trim() || 'Australia/Melbourne';
   const stationTimezone = rawTimezone.replace(/,\s*Australia$/, '').trim() || 'Australia/Melbourne';
 
-  console.log('Timezone processing:', {
-    raw: scheduleData?.timezone,
-    cleaned: stationTimezone,
-    isValid: Intl.supportedValuesOf('timeZone').includes(stationTimezone)
-  });
+
 
   useEffect(() => {
     const updateTimes = () => {
@@ -57,15 +53,7 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
         const stationNow = new Date(now.toLocaleString("en-US", { timeZone: validTimezone }));
         setStationTime(stationNow);
 
-        console.log('Timezone update:', {
-          localTime: now.toLocaleString(),
-          rawTimezone: scheduleData?.timezone,
-          cleanedTimezone: stationTimezone,
-          validTimezone,
-          stationTime: stationNow.toLocaleString(),
-          dayIndex: stationNow.getDay(),
-          dayName: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][stationNow.getDay()]
-        });
+        
       } catch (error) {
         console.warn('Invalid timezone:', stationTimezone, 'falling back to local time');
         setStationTime(now);
@@ -126,17 +114,7 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
 
       const isLive = currentTimeString >= timeSlot.startTime && currentTimeString < timeSlot.endTime;
 
-      if (isLive) {
-        console.log('Live show detected:', {
-          showName: timeSlot.showName,
-          startTime: timeSlot.startTime,
-          endTime: timeSlot.endTime,
-          currentTime: currentTimeString,
-          stationTime: stationNow.toLocaleString(),
-          dayName: currentDayName,
-          timezone: validTimezone
-        });
-      }
+      
 
       return isLive;
     } catch (error) {

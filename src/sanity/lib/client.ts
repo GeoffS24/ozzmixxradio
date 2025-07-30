@@ -34,3 +34,30 @@ export const client = createClient({
     studioUrl: getStudioUrl(),
   },
 })
+
+export const previewClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  token: process.env.SANITY_VIEWER_TOKEN,
+  useCdn: false,
+})
+
+export const writeClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  token: process.env.SANITY_VIEWER_TOKEN,
+  useCdn: false,
+})
+
+// Debug logging for write client
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔧 Sanity Write Client Config:', {
+    projectId,
+    dataset,
+    apiVersion,
+    hasWriteToken: !!process.env.SANITY_VIEWER_TOKEN,
+    tokenLength: process.env.SANITY_VIEWER_TOKEN?.length || 0
+  })
+}
