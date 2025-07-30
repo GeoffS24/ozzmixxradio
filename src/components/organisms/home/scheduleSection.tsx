@@ -150,8 +150,8 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   }
 
   return (
-    <section className="flex py-16 lg:py-16 flex-col px-5 items-start gap-12 lg:gap-20 bg-white">
-      <div className="flex flex-col items-start gap-12 lg:gap-20 container mx-auto w-full">
+    <section className="flex py-16 lg:py-16 flex-col px-5 items-start gap-12  bg-white">
+      <div className="flex flex-col items-start gap-12 container mx-auto w-full">
         <SectionHeader
           badge={sectionData.badge}
           title={sectionData.title}
