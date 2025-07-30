@@ -467,10 +467,18 @@ export function useRadioPlayer({
       console.log('Attempting to play stream:', streamUrl)
       setState(prev => ({ ...prev, error: null, isLoading: true }))
 
+      // Check if we already have an HLS instance and audio source
+      if (hlsRef.current && audioRef.current.src) {
+        // Resume existing stream
+        console.log('Resuming existing stream')
+        await audioRef.current.play()
+        return
+      }
+
       // Stop any current playback
       audioRef.current.pause()
 
-      // Clean up existing HLS instance
+      // Clean up existing HLS instance only if we're starting fresh
       if (hlsRef.current) {
         hlsRef.current.destroy()
         hlsRef.current = null
@@ -533,22 +541,28 @@ export function useRadioPlayer({
 
   const pause = useCallback(() => {
     if (!audioRef.current) return
+
+    console.log('Pausing audio')
     audioRef.current.pause()
 
-    // Clean up HLS if it exists
-    if (hlsRef.current) {
-      hlsRef.current.destroy()
-      hlsRef.current = null
-    }
+    // Don't destroy HLS instance - just pause the audio
+    // This allows for proper resume functionality
   }, [])
 
   const togglePlay = useCallback(() => {
+    console.log('Toggle play called, current state:', {
+      isPlaying: state.isPlaying,
+      isLoading: state.isLoading,
+      hasHLS: !!hlsRef.current,
+      hasAudioSrc: !!audioRef.current?.src
+    })
+
     if (state.isPlaying) {
       pause()
     } else {
       play()
     }
-  }, [state.isPlaying, play, pause])
+  }, [state.isPlaying, state.isLoading, play, pause])
 
   const setVolume = useCallback((newVolume: number) => {
     const clampedVolume = Math.max(0, Math.min(100, newVolume))
@@ -567,7 +581,23 @@ export function useRadioPlayer({
     setVolume(state.volume - 10)
   }, [state.volume, setVolume])
 
-  // Cleanup
+  // Cleanup when stream URL changes
+  useEffect(() => {
+    return () => {
+      // Clean up HLS when stream URL changes
+      if (hlsRef.current) {
+        console.log('Cleaning up HLS instance due to stream URL change')
+        hlsRef.current.destroy()
+        hlsRef.current = null
+      }
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+      }
+    }
+  }, [streamUrl])
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       const statusInterval = statusIntervalRef.current

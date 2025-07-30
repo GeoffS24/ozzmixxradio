@@ -1,9 +1,11 @@
 "use client"
 
 import { motion } from 'framer-motion'
-import { Music, Radio, Headphones, Volume2, Waves, Zap } from 'lucide-react'
+import { Music } from 'lucide-react'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
-import { EnhancedRadioPlayer } from '@/components/organisms/media/EnhancedRadioPlayer'
+import { SimpleRadioPlayer } from '@/components/organisms/media/SimpleRadioPlayer'
+import { NowPlayingInfo } from '@/components/organisms/media/NowPlayingInfo'
+import { useRadioPlayer } from '@/lib/hooks/useRadioPlayer'
 import { urlFor } from '@/sanity/lib/image'
 import type { RadioStationData } from '@/types/sanity'
 
@@ -43,16 +45,21 @@ export function MusicSection({ data, radioStationData }: MusicSectionProps) {
     statusApiUrl: statusApiUrl,
   }
 
-  console.log('MusicSection configuration:', {
-    radioStationStreamUrl: radioStationData?.radioConfig?.streamUrl,
-    homePageStreamUrl: data?.radioStreamUrl,
-    finalStreamUrl: sectionData.radioStreamUrl,
-    radioStationStatusUrl: radioStationData?.radioConfig?.statusApiUrl,
-    homePageStatusUrl: data?.statusApiUrl,
-    finalStatusUrl: sectionData.statusApiUrl
+  // Single radio player hook to share data between components
+  const radioPlayerData = useRadioPlayer({
+    streamUrl: sectionData.radioStreamUrl,
+    statusApiUrl: sectionData.statusApiUrl,
+    defaultVolume: radioStationData?.radioConfig?.defaultVolume ?? 50,
+    autoPlay: radioStationData?.radioConfig?.autoPlay ?? false,
   })
 
-  // Don't render if disabled
+  console.log('Radio Player Data:', {
+    nowPlaying: radioPlayerData.nowPlaying,
+    playingNext: radioPlayerData.playingNext,
+    songHistory: radioPlayerData.songHistory,
+    songHistoryLength: radioPlayerData.songHistory?.length
+  })
+
   if (!sectionData.enabled) {
     return null
   }
@@ -157,118 +164,34 @@ export function MusicSection({ data, radioStationData }: MusicSectionProps) {
         </motion.div>
 
         {/* Music Player Section */}
-        <div className="flex lg:flex-row flex-col items-center gap-16 w-full max-w-7xl">
-          {/* Left Side - Visual Elements & Features */}
+        <div className="flex lg:flex-row flex-col items-start gap-8 w-full max-w-7xl">
+          {/* Left Side - Radio Player */}
           <motion.div
-            className="flex-1 flex flex-col items-center justify-center gap-8"
+            className="lg:w-96 w-full flex flex-col items-center justify-start"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            {/* Main Visual */}
-            <div className="relative">
-              <motion.div
-                className="w-80 h-80 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-full flex items-center justify-center relative overflow-hidden"
-                animate={{
-                  rotate: 360,
-                }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                {/* Vinyl Record Effect */}
-                <div className="absolute inset-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full flex items-center justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center">
-                    <Radio className="w-8 h-8 text-primary" />
-                  </div>
-                  {/* Vinyl grooves */}
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute border border-gray-600/30 rounded-full"
-                      style={{
-                        width: `${60 + i * 15}%`,
-                        height: `${60 + i * 15}%`,
-                      }}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Floating Icons */}
-              {[
-                { icon: Headphones, position: "top-0 left-0", delay: 0 },
-                { icon: Volume2, position: "top-0 right-0", delay: 1 },
-                { icon: Waves, position: "bottom-0 left-0", delay: 2 },
-                { icon: Zap, position: "bottom-0 right-0", delay: 3 },
-              ].map(({ icon: Icon, position, delay }, i) => (
-                <motion.div
-                  key={i}
-                  className={`absolute ${position} -translate-x-1/2 -translate-y-1/2`}
-                  animate={{
-                    y: [0, -10, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: delay,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <div className="w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-primary/20">
-                    <Icon className="w-6 h-6 text-primary" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Features List */}
-            <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-              {[
-                { icon: Music, title: "Live Streaming", desc: "High-quality audio" },
-                { icon: Radio, title: "Song History", desc: "Track what's played" },
-                { icon: Headphones, title: "Next Playing", desc: "See what's coming" },
-                { icon: Volume2, title: "Live Shows", desc: "DJ broadcasts" },
-              ].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  className="p-4 bg-card/50 backdrop-blur-sm rounded-lg border border-border/50 text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 + i * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <feature.icon className="w-6 h-6 text-primary mx-auto mb-2" />
-                  <h4 className="font-semibold text-sm text-foreground">{feature.title}</h4>
-                  <p className="text-xs text-muted-foreground">{feature.desc}</p>
-                </motion.div>
-              ))}
-            </div>
+            <SimpleRadioPlayer
+              radioPlayerData={radioPlayerData}
+              fallbackImage={fallbackImageUrl}
+              className="w-full shadow-2xl"
+              showListenerCount={radioStationData?.radioConfig?.showListenerCount ?? false}
+            />
           </motion.div>
 
-          {/* Enhanced Radio Player */}
+          {/* Right Side - Song Information */}
           <motion.div
-            className="flex-1 flex w-full flex-col gap-6 justify-center"
+            className="flex-1 flex w-full flex-col"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <EnhancedRadioPlayer
-              streamUrl={sectionData.radioStreamUrl}
-              statusApiUrl={sectionData.statusApiUrl}
+            <NowPlayingInfo
+              radioPlayerData={radioPlayerData}
               fallbackImage={fallbackImageUrl}
-              className="max-w-[450px] mx-auto shadow-2xl"
-              defaultVolume={radioStationData?.radioConfig?.defaultVolume ?? 50}
-              autoPlay={radioStationData?.radioConfig?.autoPlay ?? false}
-              showListenerCount={radioStationData?.radioConfig?.showListenerCount ?? false}
-              showSongHistory={true}
-              showNextPlaying={true}
             />
           </motion.div>
         </div>
