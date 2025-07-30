@@ -22,6 +22,23 @@ export const structure: StructureResolver = (S) =>
             ])
         ),
 
+      // About Page Section
+      S.listItem()
+        .title('ℹ️ About Page')
+        .child(
+          S.list()
+            .title('About Page Content')
+            .items([
+              S.documentTypeListItem('aboutPage')
+                .title('Page Content')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                ),
+            ])
+        ),
+
       S.divider(),
 
       // Schedule Section

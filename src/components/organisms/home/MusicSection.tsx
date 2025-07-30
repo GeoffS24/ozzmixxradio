@@ -1,7 +1,7 @@
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { RadioPlayer } from '@/components/molecules/media/RadioPlayer'
-import { AudioStreamTester } from '@/components/molecules/media/AudioStreamTester'
 import { urlFor } from '@/sanity/lib/image'
+import type { RadioStationData } from '@/types/sanity'
 
 interface MusicSectionData {
   enabled?: boolean
@@ -20,17 +20,18 @@ interface MusicSectionData {
 
 interface MusicSectionProps {
   data?: MusicSectionData
+  radioStationData?: RadioStationData | null
 }
 
-export function MusicSection({ data }: MusicSectionProps) {
+export function MusicSection({ data, radioStationData }: MusicSectionProps) {
   // Default values
   const sectionData = {
     enabled: data?.enabled ?? true,
     badge: data?.badge ?? 'Listen',
     title: data?.title ?? 'Your Favorite Music, Anytime, Anywhere',
     description: data?.description ?? 'Tune in to our station for a diverse mix of music. Enjoy seamless listening with our easy-to-use radio player.',
-    radioStreamUrl: data?.radioStreamUrl ?? 'https://a2.asurahosting.com/listen/ozzmixx_dance_radio/radio.mp3',
-    statusApiUrl: data?.statusApiUrl ?? 'https://a2.asurahosting.com:7330/status-json.xsl',
+    radioStreamUrl: data?.radioStreamUrl ?? 'https://stream.ozzmixxradio.com/hls/ozzmixxradio/live.m3u8',
+    statusApiUrl: data?.statusApiUrl ?? 'https://stream.ozzmixxradio.com/api/nowplaying',
   }
 
   // Don't render if disabled
@@ -64,8 +65,9 @@ export function MusicSection({ data }: MusicSectionProps) {
               statusApiUrl={sectionData.statusApiUrl}
               fallbackImage={fallbackImageUrl}
               className="max-w-[400px] mx-auto"
-              defaultVolume={50}
-              autoPlay={false}
+              defaultVolume={radioStationData?.radioConfig?.defaultVolume ?? 50}
+              autoPlay={radioStationData?.radioConfig?.autoPlay ?? false}
+              showListenerCount={radioStationData?.radioConfig?.showListenerCount ?? true}
             />
           </div>
         </div>

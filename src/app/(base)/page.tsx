@@ -5,11 +5,11 @@ import { MusicSection } from "@/components/organisms/home/MusicSection";
 import { ScheduleSection } from "@/components/organisms/home/scheduleSection";
 import { AppDownloadSection } from "@/components/organisms/home/AppDownloadSection";
 import { sanityFetch } from "@/sanity/lib/live";
-import { HOME_PAGE_QUERY, SCHEDULE_QUERY, POSTS_QUERY } from "@/sanity/lib/queries/homeQueries";
-import type { HomePageData, ScheduleData, BlogPost } from "@/types/sanity";
+import { HOME_PAGE_QUERY, SCHEDULE_QUERY, POSTS_QUERY, RADIO_STATION_QUERY } from "@/sanity/lib/queries/homeQueries";
+import type { HomePageData, ScheduleData, BlogPost, RadioStationData } from "@/types/sanity";
 
 export default async function Home() {
-  const [homePageData, scheduleData, postsData] = await Promise.all([
+  const [homePageData, scheduleData, postsData, radioStationData] = await Promise.all([
     sanityFetch({
       query: HOME_PAGE_QUERY,
     }),
@@ -18,18 +18,25 @@ export default async function Home() {
     }),
     sanityFetch({
       query: POSTS_QUERY,
-      params: { limit: 6 }, 
+      params: { limit: 6 },
+    }),
+    sanityFetch({
+      query: RADIO_STATION_QUERY,
     }),
   ]);
 
   const homePage = homePageData.data as HomePageData | null;
   const schedule = scheduleData.data as ScheduleData | null;
   const posts = postsData.data as BlogPost[] | null;
+  const radioStation = radioStationData.data as RadioStationData | null;
 
   return (
     <div className="min-h-screen bg-background ">
       <Hero data={homePage?.heroSection} />
-      <MusicSection data={homePage?.musicSection} />
+      <MusicSection
+        data={homePage?.musicSection}
+        radioStationData={radioStation}
+      />
       <ScheduleSection
         data={homePage?.scheduleSection}
         scheduleData={schedule}

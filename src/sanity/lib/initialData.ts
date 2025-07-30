@@ -21,8 +21,8 @@ export const initialHomePageData = {
     badge: 'Listen',
     title: 'Your Favorite Music, Anytime, Anywhere',
     description: 'Tune in to our station for a diverse mix of music. Enjoy seamless listening with our easy-to-use radio player.',
-    radioStreamUrl: 'https://a2.asurahosting.com/listen/ozzmixx_dance_radio/radio.mp3',
-    statusApiUrl: 'https://a2.asurahosting.com:7330/status-json.xsl',
+    radioStreamUrl: 'https://stream.ozzmixxradio.com/hls/ozzmixxradio/live.m3u8',
+    statusApiUrl: 'https://stream.ozzmixxradio.com/api/nowplaying',
   },
   scheduleSection: {
     enabled: true,
@@ -60,7 +60,7 @@ export const initialScheduleData = {
   _id: 'weeklySchedule',
   _type: 'schedule',
   title: 'Weekly Radio Schedule',
-  timezone: 'America/New_York',
+  timezone: 'Australia/Melbourne',
   weeklySchedule: [
     {
       dayOfWeek: 'monday',
@@ -235,6 +235,92 @@ export const initialScheduleData = {
   ],
 }
 
+export const initialAboutPageData = {
+  _id: 'aboutPage',
+  _type: 'aboutPage',
+  title: 'About OZZ Dance Radio',
+  slug: { current: 'about' },
+  heroSection: {
+    enabled: true,
+    title: 'About OZZ Dance Radio',
+    description: 'Learn more about our station, our mission, and the team behind the music that keeps you dancing.',
+  },
+  content: [
+    {
+      _type: 'block',
+      style: 'h2',
+      children: [{ _type: 'span', text: 'Our Story' }],
+    },
+    {
+      _type: 'block',
+      style: 'normal',
+      children: [
+        {
+          _type: 'span',
+          text: 'OZZ Dance Radio was born from a passion for electronic dance music and a desire to bring the best beats to listeners around the world. Since our inception, we have been dedicated to showcasing both established and emerging artists in the dance music scene.',
+        },
+      ],
+    },
+    {
+      _type: 'block',
+      style: 'h2',
+      children: [{ _type: 'span', text: 'Our Mission' }],
+    },
+    {
+      _type: 'block',
+      style: 'normal',
+      children: [
+        {
+          _type: 'span',
+          text: 'We believe that music has the power to unite people and create unforgettable moments. Our mission is to provide a platform where dance music lovers can discover new tracks, enjoy their favorites, and connect with a community that shares their passion.',
+        },
+      ],
+    },
+    {
+      _type: 'block',
+      style: 'h2',
+      children: [{ _type: 'span', text: 'What We Offer' }],
+    },
+    {
+      _type: 'block',
+      style: 'normal',
+      children: [
+        {
+          _type: 'span',
+          text: '• 24/7 streaming of the latest dance, electronic, and house music\n• Live DJ sets and exclusive mixes\n• Interviews with artists and industry professionals\n• Music news and updates from the dance music world\n• Interactive shows where listeners can request their favorite tracks',
+        },
+      ],
+    },
+  ],
+  teamSection: {
+    enabled: true,
+    title: 'Meet Our Team',
+    description: 'Get to know the passionate people behind OZZ Dance Radio.',
+    teamMembers: [
+      {
+        name: 'DJ Mike',
+        role: 'Station Manager & Head DJ',
+        bio: 'With over 10 years of experience in the dance music industry, Mike brings energy and expertise to every show.',
+      },
+      {
+        name: 'Sarah Electronic',
+        role: 'Music Director',
+        bio: 'Sarah curates our playlist and discovers the hottest new tracks in electronic music.',
+      },
+      {
+        name: 'Alex Beats',
+        role: 'Technical Director',
+        bio: 'Alex ensures our stream quality is always top-notch and our technology stays cutting-edge.',
+      },
+    ],
+  },
+  seoSettings: {
+    metaTitle: 'About OZZ Dance Radio - Your Favorite Dance Music Station',
+    metaDescription: 'Learn about OZZ Dance Radio, our mission to bring you the best dance music 24/7, and meet the passionate team behind the beats.',
+    keywords: ['about', 'OZZ Dance Radio', 'dance music', 'electronic music', 'radio station', 'team'],
+  },
+}
+
 export const initialRadioStationData = {
   _id: 'radioStationSettings',
   _type: 'radioStation',
@@ -242,10 +328,11 @@ export const initialRadioStationData = {
   tagline: 'Your favorite dance music station',
   description: 'Broadcasting the best in dance, electronic, and house music 24/7. Join our community of music lovers and discover your new favorite tracks.',
   radioConfig: {
-    streamUrl: 'https://a2.asurahosting.com/listen/ozzmixx_dance_radio/radio.mp3',
-    statusApiUrl: 'https://a2.asurahosting.com:7330/status-json.xsl',
+    streamUrl: 'https://stream.ozzmixxradio.com/hls/ozzmixxradio/live.m3u8',
+    statusApiUrl: 'https://stream.ozzmixxradio.com/api/nowplaying',
     defaultVolume: 50,
     autoPlay: false,
+    showListenerCount: true,
   },
   contactInfo: {
     address: 'Level 1, 12 Sample St, Sydney NSW 2000',

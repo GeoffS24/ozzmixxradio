@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import Hls from 'hls.js'
 
 interface RadioStatus {
   title?: string
@@ -34,10 +35,13 @@ export function useRadioPlayer({
   streamUrl,
   statusApiUrl,
   defaultVolume = 50,
-  autoPlay = false,
+  autoPlay = false, // TODO: Implement autoPlay functionality
   updateInterval = 10000, // 10 seconds
 }: UseRadioPlayerProps) {
+  // Suppress unused variable warning for autoPlay - will be implemented later
+  void autoPlay;
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const hlsRef = useRef<Hls | null>(null)
   const statusIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -177,16 +181,34 @@ export function useRadioPlayer({
       }
 
       const data = await response.json()
-      
+
       // Parse the response based on common radio API formats
       let trackInfo: RadioStatus = {}
-      
-      if (data.icestats && data.icestats.source) {
-        // Icecast format
-        const source = Array.isArray(data.icestats.source) 
-          ? data.icestats.source[0] 
+
+      if (Array.isArray(data) && data.length > 0) {
+        // New API format (array with station data)
+        const stationData = data[0]
+        const nowPlaying = stationData.now_playing
+        const listeners = stationData.listeners
+
+        if (nowPlaying && nowPlaying.song) {
+          trackInfo = {
+            title: nowPlaying.song.title || '',
+            artist: nowPlaying.song.artist || '',
+            album: nowPlaying.song.album || '',
+            listeners: listeners?.current || listeners?.total || 0,
+            bitrate: '', // Not provided in new API
+            genre: nowPlaying.song.genre || '',
+            server_description: stationData.station?.description || '',
+            stream_start: stationData.live?.broadcast_start || '',
+          }
+        }
+      } else if (data.icestats && data.icestats.source) {
+        // Icecast format (legacy)
+        const source = Array.isArray(data.icestats.source)
+          ? data.icestats.source[0]
           : data.icestats.source
-          
+
         trackInfo = {
           title: source.title || source.yp_currently_playing,
           artist: source.artist,
@@ -198,7 +220,7 @@ export function useRadioPlayer({
           stream_start: source.stream_start,
         }
       } else if (data.title || data.artist) {
-        // Direct format
+        // Direct format (legacy)
         trackInfo = data
       }
 
@@ -242,39 +264,54 @@ export function useRadioPlayer({
       // Stop any current playback
       audioRef.current.pause()
 
-      // Set the stream URL
-      audioRef.current.src = streamUrl
+      // Clean up existing HLS instance
+      if (hlsRef.current) {
+        hlsRef.current.destroy()
+        hlsRef.current = null
+      }
 
-      // Try to play
-      const playPromise = audioRef.current.play()
+      // Check if it's an HLS stream
+      const isHLS = streamUrl.includes('.m3u8')
 
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log('Playback started successfully')
-          })
-          .catch((error) => {
-            console.error('Play promise rejected:', error)
+      if (isHLS && Hls.isSupported()) {
+        // Use HLS.js for HLS streams
+        console.log('Using HLS.js for HLS stream')
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 90,
+        })
 
-            let errorMessage = 'Failed to start playback'
+        hlsRef.current = hls
+        hls.loadSource(streamUrl)
+        hls.attachMedia(audioRef.current)
 
-            if (error.name === 'NotAllowedError') {
-              errorMessage = 'Playback blocked by browser. User interaction required.'
-            } else if (error.name === 'NotSupportedError') {
-              errorMessage = 'Audio format not supported'
-            } else if (error.name === 'AbortError') {
-              errorMessage = 'Playback was interrupted'
-            } else if (error.message) {
-              errorMessage = error.message
-            }
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log('HLS manifest parsed, starting playback')
+          audioRef.current?.play()
+        })
 
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          console.error('HLS error:', data)
+          if (data.fatal) {
             setState(prev => ({
               ...prev,
               isLoading: false,
-              error: errorMessage,
+              error: `HLS error: ${data.details}`,
               isConnected: false
             }))
-          })
+          }
+        })
+      } else if (isHLS && audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari)
+        console.log('Using native HLS support')
+        audioRef.current.src = streamUrl
+        await audioRef.current.play()
+      } else {
+        // Regular audio stream (MP3, AAC, etc.)
+        console.log('Using regular audio element')
+        audioRef.current.src = streamUrl
+        await audioRef.current.play()
       }
 
     } catch (error) {
@@ -291,6 +328,12 @@ export function useRadioPlayer({
   const pause = useCallback(() => {
     if (!audioRef.current) return
     audioRef.current.pause()
+
+    // Clean up HLS if it exists
+    if (hlsRef.current) {
+      hlsRef.current.destroy()
+      hlsRef.current = null
+    }
   }, [])
 
   const togglePlay = useCallback(() => {
@@ -321,15 +364,23 @@ export function useRadioPlayer({
   // Cleanup
   useEffect(() => {
     return () => {
-      if (statusIntervalRef.current) {
-        clearInterval(statusIntervalRef.current)
+      const statusInterval = statusIntervalRef.current
+      const retryTimeout = retryTimeoutRef.current
+      const hls = hlsRef.current
+      const audio = audioRef.current
+
+      if (statusInterval) {
+        clearInterval(statusInterval)
       }
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current)
+      if (retryTimeout) {
+        clearTimeout(retryTimeout)
       }
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.src = ''
+      if (hls) {
+        hls.destroy()
+      }
+      if (audio) {
+        audio.pause()
+        audio.src = ''
       }
     }
   }, [])

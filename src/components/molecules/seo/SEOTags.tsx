@@ -29,28 +29,50 @@ export function SEOTags({
         content={`${noIndex ? 'noindex' : 'index'},${noFollow ? 'nofollow' : 'follow'},max-snippet:-1,max-image-preview:large,max-video-preview:-1`} 
       />
 
+      {/* Geo-targeting for Australia */}
+      <meta name="geo.region" content="AU-VIC" />
+      <meta name="geo.placename" content="Melbourne" />
+      <meta name="geo.position" content="-37.8136;144.9631" />
+      <meta name="ICBM" content="-37.8136, 144.9631" />
+
+      {/* Language and locale */}
+      <meta httpEquiv="content-language" content="en-AU" />
+      <meta name="language" content="English" />
+
+      {/* Australian specific meta tags */}
+      <meta name="country" content="Australia" />
+      <meta name="state" content="Victoria" />
+      <meta name="city" content="Melbourne" />
+
       {/* Additional SEO meta tags */}
-      <meta name="format-detection" content="telephone=no" />
+      <meta name="format-detection" content="telephone=yes" />
+      <meta name="format-detection" content="address=yes" />
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      <meta name="apple-mobile-web-app-title" content="OZZ Radio" />
-      <meta name="application-name" content="OZZ Radio" />
+      <meta name="apple-mobile-web-app-title" content="OZZ Dance Radio" />
+      <meta name="application-name" content="OZZ Dance Radio" />
       <meta name="msapplication-TileColor" content="#ff6b35" />
       <meta name="theme-color" content="#ff6b35" />
+      <meta name="msapplication-navbutton-color" content="#ff6b35" />
 
       {/* Preconnect to external domains for performance */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://cdn.sanity.io" />
-      <link rel="preconnect" href="https://a2.asurahosting.com" />
+      <link rel="preconnect" href="https://stream.ozzmixxradio.com" />
 
       {/* DNS prefetch for better performance */}
       <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       <link rel="dns-prefetch" href="https://connect.facebook.net" />
+      <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+      <link rel="dns-prefetch" href="https://stream.ozzmixxradio.com" />
 
       {/* Alternate language versions */}
+      <link rel="alternate" hrefLang="en-au" href={canonicalUrl || "https://ozzmixxradio.com"} />
+      <link rel="alternate" hrefLang="en" href={canonicalUrl || "https://ozzmixxradio.com"} />
+      <link rel="alternate" hrefLang="x-default" href={canonicalUrl || "https://ozzmixxradio.com"} />
       {alternateLanguages.map((lang) => (
         <link
           key={lang.hrefLang}
@@ -105,11 +127,16 @@ export function SEOTags({
             "email": "info@ozzradio.com",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "Level 1, 12 Sample St",
-              "addressLocality": "Sydney",
-              "addressRegion": "NSW",
-              "postalCode": "2000",
+              "streetAddress": "Melbourne",
+              "addressLocality": "Melbourne",
+              "addressRegion": "VIC",
+              "postalCode": "3000",
               "addressCountry": "AU"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": -37.8136,
+              "longitude": 144.9631
             },
             "openingHours": "Mo-Su 00:00-23:59",
             "priceRange": "Free",

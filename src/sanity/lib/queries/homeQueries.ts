@@ -118,7 +118,8 @@ export const RADIO_STATION_QUERY = defineQuery(`*[_type == 'radioStation' && _id
     statusApiUrl,
     backupStreamUrl,
     defaultVolume,
-    autoPlay
+    autoPlay,
+    showListenerCount
   },
   contactInfo {
     address,

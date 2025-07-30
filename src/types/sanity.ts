@@ -97,6 +97,53 @@ export interface AppDownloadSectionData {
   backgroundImage?: SanityImage
 }
 
+// About Page Types
+export interface AboutPageData {
+  _id: string
+  _type: 'aboutPage'
+  title?: string
+  slug?: {
+    current: string
+  }
+  heroSection?: AboutHeroSectionData
+  content?: any[] // Portable text content
+  teamSection?: AboutTeamSectionData
+  seoSettings?: AboutSEOSettings
+}
+
+export interface AboutHeroSectionData {
+  enabled?: boolean
+  title?: string
+  description?: string
+  backgroundImage?: SanityImage
+}
+
+export interface AboutTeamSectionData {
+  enabled?: boolean
+  title?: string
+  description?: string
+  teamMembers?: TeamMember[]
+}
+
+export interface TeamMember {
+  name: string
+  role: string
+  bio?: string
+  image?: SanityImage
+  socialLinks?: {
+    twitter?: string
+    instagram?: string
+    linkedin?: string
+  }
+}
+
+export interface AboutSEOSettings {
+  metaTitle?: string
+  metaDescription?: string
+  keywords?: string[]
+  ogImage?: SanityImage
+}
+
 // Schedule Types
 export interface ScheduleData {
   _id: string
@@ -143,6 +190,7 @@ export interface RadioConfig {
   backupStreamUrl?: string
   defaultVolume?: number
   autoPlay?: boolean
+  showListenerCount?: boolean
 }
 
 export interface ContactInfo {

@@ -64,7 +64,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.75 0.28 29.5); /* Keep as a general primary for UI elements */
+  --primary: oklch(0.55 0.28 29.5); /* Darker for better contrast with white text */
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.91 0.16 90); /* Keep as a general secondary for UI elements */
   --secondary-foreground: oklch(0.205 0 0);
@@ -102,7 +102,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --persimmon: #EF716B; /* Keeping your existing persimmon */
+  --persimmon: #D63031; /* Darker persimmon for better contrast */
 }
 
 .dark {
@@ -147,7 +147,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-  --persimmon: #EF716B;
+  --persimmon: #D63031;
 }
 
 @layer base {

@@ -17,8 +17,8 @@ export const scheduleType = defineType({
       name: 'timezone',
       title: 'Station Timezone',
       type: 'string',
-      initialValue: 'America/New_York',
-      description: 'Timezone for the radio station (e.g., America/New_York, Europe/London)',
+      initialValue: 'Australia/Melbourne',
+      description: 'Timezone for the radio station (e.g., Australia/Melbourne, America/New_York, Europe/London)',
     }),
     defineField({
       name: 'weeklySchedule',

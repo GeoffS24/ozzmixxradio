@@ -45,7 +45,7 @@ export function CompanyInfo({ stationData }: CompanyInfoProps) {
       </ContactInfo>
 
       <div className="flex flex-col items-start gap-4 w-full">
-        <h4 className="text-xs lg:text-sm font-bold leading-[150%] text-foreground">Follow Us:</h4>
+        <span className="text-xs lg:text-sm font-bold leading-[150%] text-foreground">Follow Us:</span>
         <SocialLinks socialMedia={stationData?.socialMedia} />
       </div>
     </div>

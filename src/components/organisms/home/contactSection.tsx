@@ -70,27 +70,31 @@ export function ContactSection({ data }: ContactSectionProps) {
           {/* Name Fields */}
           <div className="flex lg:flex-row flex-col items-start gap-6 w-full">
             <div className="flex flex-col items-start gap-2 flex-1 w-full">
-              <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
+              <label htmlFor="firstName" className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 First Name
               </label>
               <input
                 type="text"
+                id="firstName"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
                 className="flex h-12 px-3 py-2 items-center gap-2 w-full border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
             </div>
             <div className="flex flex-col items-start gap-2 flex-1 w-full">
-              <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
+              <label htmlFor="lastName" className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 Last Name
               </label>
               <input
                 type="text"
+                id="lastName"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
                 className="flex h-12 px-3 py-2 items-center gap-2 w-full border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
             </div>
           </div>
@@ -98,23 +102,26 @@ export function ContactSection({ data }: ContactSectionProps) {
           {/* Email and Phone */}
           <div className="flex lg:flex-row flex-col items-start gap-6 w-full">
             <div className="flex flex-col items-start gap-2 flex-1 w-full">
-              <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
+              <label htmlFor="email" className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 Email
               </label>
               <input
                 type="email"
+                id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 className="flex h-12 px-3 py-2 items-center gap-2 w-full border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
             </div>
             <div className="flex flex-col items-start gap-2 flex-1 w-full">
-              <label className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
+              <label htmlFor="phone" className="text-sm lg:text-base font-normal leading-[150%] text-foreground w-full">
                 Phone Number
               </label>
               <input
                 type="tel"
+                id="phone"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}

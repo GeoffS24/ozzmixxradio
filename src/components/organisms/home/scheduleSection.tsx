@@ -30,15 +30,30 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   };
 
   const [activeDay, setActiveDay] = useState<string>("monday");
-  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [stationTime, setStationTime] = useState<Date>(new Date());
+
+  // Get station timezone from schedule data, default to Melbourne
+  const stationTimezone = scheduleData?.timezone?.trim() || 'Australia/Melbourne';
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 60000); 
+    const updateTimes = () => {
+      const now = new Date();
+
+      try {
+        // Convert current time to station timezone
+        const stationNow = new Date(now.toLocaleString("en-US", { timeZone: stationTimezone }));
+        setStationTime(stationNow);
+      } catch (error) {
+        console.warn('Invalid timezone:', stationTimezone, 'falling back to local time');
+        setStationTime(now);
+      }
+    };
+
+    updateTimes(); // Initial update
+    const interval = setInterval(updateTimes, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [stationTimezone]);
 
 
   const dayNames = {
@@ -51,9 +66,9 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
     sunday: "Sunday",
   };
 
-  const currentDayIndex = currentTime.getDay();
+  const currentDayIndex = stationTime.getDay();
   const currentDayName =
-    Object.keys(dayNames)[currentDayIndex === 0 ? 6 : currentDayIndex - 1]; 
+    Object.keys(dayNames)[currentDayIndex === 0 ? 6 : currentDayIndex - 1];
 
   useEffect(() => {
     setActiveDay(currentDayName);
@@ -74,7 +89,7 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   const isCurrentShow = (timeSlot: TimeSlot) => {
     if (!sectionData.showCurrentTime) return false;
 
-    const now = currentTime;
+    const now = stationTime;
     const currentTimeString = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 
     return (
@@ -102,11 +117,22 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>Station Time:</span>
             <span className="font-medium text-primary">
-              {currentTime.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZoneName: "short",
-              })}
+              {(() => {
+                try {
+                  return stationTime.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    timeZone: stationTimezone,
+                    timeZoneName: "short",
+                  });
+                } catch (error) {
+                  return stationTime.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    timeZoneName: "short",
+                  });
+                }
+              })()}
             </span>
           </div>
         )}

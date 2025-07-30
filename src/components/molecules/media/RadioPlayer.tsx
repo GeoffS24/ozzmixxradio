@@ -11,6 +11,7 @@ interface RadioPlayerProps {
   className?: string
   defaultVolume?: number
   autoPlay?: boolean
+  showListenerCount?: boolean
 }
 
 export function RadioPlayer({
@@ -20,6 +21,7 @@ export function RadioPlayer({
   className,
   defaultVolume = 50,
   autoPlay = false,
+  showListenerCount = true,
 }: RadioPlayerProps) {
   const {
     isPlaying,
@@ -130,7 +132,7 @@ export function RadioPlayer({
             <span className="px-2 py-1 bg-muted rounded-full">
               {currentTrack.genre}
             </span>
-            {currentTrack.listeners && (
+            {showListenerCount && currentTrack.listeners && (
               <span>{currentTrack.listeners} listeners</span>
             )}
           </div>

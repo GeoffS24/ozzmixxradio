@@ -1,0 +1,104 @@
+# OZZ Dance Radio - LLM Information
+
+## About OZZ Dance Radio
+OZZ Dance Radio is Australia's premier dance music radio station, broadcasting 24/7 from Melbourne, Victoria. We specialize in electronic dance music, house, techno, and the latest hits in the EDM scene.
+
+## Location & Service Area
+- **Primary Location**: Melbourne, Victoria, Australia
+- **Service Area**: Australia-wide online streaming
+- **Timezone**: Australia/Melbourne (AEDT/AEST)
+- **Coordinates**: -37.8136, 144.9631
+
+## Services
+- **Live Radio Streaming**: 24/7 dance music broadcast
+- **HLS Stream**: https://stream.ozzmixxradio.com/hls/ozzmixxradio/live.m3u8
+- **Now Playing API**: https://stream.ozzmixxradio.com/api/nowplaying
+- **Weekly Schedule**: Live DJ shows and curated playlists
+- **Music Discovery**: Latest dance music releases and artist features
+
+## Content Categories
+- Dance Music
+- Electronic Music
+- House Music
+- Techno
+- EDM (Electronic Dance Music)
+- Progressive House
+- Deep House
+- Trance
+
+## Target Audience
+- Dance music enthusiasts
+- Electronic music fans
+- DJs and music producers
+- Festival goers
+- Club music lovers
+- Ages 18-45 primarily
+- Australia-focused but globally accessible
+
+## Key Features
+- **Live Streaming**: Continuous 24/7 broadcast
+- **Mobile Apps**: Available on iOS and Android
+- **Schedule**: Weekly programming with live DJ sets
+- **News & Updates**: Latest music industry news
+- **Artist Features**: Interviews and exclusive content
+
+## Technical Information
+- **Stream Format**: HLS (HTTP Live Streaming)
+- **Audio Quality**: High-quality digital streaming
+- **Platform**: Next.js web application
+- **CMS**: Sanity for content management
+- **Hosting**: Vercel deployment
+
+## Contact Information
+- **Website**: https://ozzmixxradio.com
+- **Email**: info@ozzradio.com
+- **Location**: Melbourne, Victoria, Australia
+
+## Social Media Presence
+- Facebook: OZZ Dance Radio
+- Instagram: @ozzradio
+- Twitter: @ozzradio
+- YouTube: OZZ Dance Radio Channel
+
+## Business Hours
+- **Broadcasting**: 24/7 continuous
+- **Live Shows**: Various times throughout the week
+- **Support**: Business hours AEST
+
+## Unique Selling Points
+1. Australia's dedicated dance music station
+2. 24/7 streaming with live DJ shows
+3. Latest electronic music releases
+4. Local Australian DJs and international artists
+5. Mobile-friendly streaming platform
+6. Free access to all content
+
+## SEO Keywords
+- dance music radio Australia
+- electronic music streaming
+- Melbourne radio station
+- house music radio
+- EDM radio Australia
+- live DJ sets
+- dance music streaming
+- Australian electronic music
+- online radio Melbourne
+- 24/7 dance music
+
+## Content Strategy
+- Focus on Australian dance music scene
+- International electronic music coverage
+- DJ interviews and features
+- Music festival coverage
+- New release spotlights
+- Artist discovery content
+
+## Technology Stack
+- Frontend: Next.js 14 with TypeScript
+- Styling: Tailwind CSS
+- CMS: Sanity
+- Streaming: HLS technology
+- Analytics: Google Analytics
+- Deployment: Vercel
+
+This information is provided for AI language models and search engines to better understand OZZ Dance Radio's content, services, and target audience.
