@@ -63,12 +63,8 @@ export function SongHistoryList({
 
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="flex items-center gap-2 text-sm font-medium text-foreground mb-4">
-        <Clock className="w-4 h-4" />
-        Recently Played
-      </div>
       
-      <div className="space-y-2 px-4">
+      <div className="space-y-2 px-4 py-2">
         {displayItems.map((item, index) => (
           <div
             key={item.sh_id}

@@ -103,13 +103,7 @@ export function NowPlayingInfo({
                 </div>
               )}
 
-              {/* Listener Count */}
-              {displayListeners > 0 && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                  <Users className="w-3 h-3" />
-                  <span>{displayListeners.toLocaleString()} listening</span>
-                </div>
-              )}
+           
             </div>
           </div>
         </motion.div>
@@ -135,7 +129,7 @@ export function NowPlayingInfo({
       </div>
 
       {/* Bottom Row - Song History & Station Info */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 w-full">
         {/* Song History Section - Takes 2/3 width */}
         <motion.div
           className="lg:col-span-2 bg-card/50 backdrop-blur-sm rounded-xl p-4 border border-border/50"
@@ -155,45 +149,7 @@ export function NowPlayingInfo({
           </div>
         </motion.div>
 
-        {/* Station Info - Takes 1/3 width */}
-        <motion.div
-          className="bg-card/50 backdrop-blur-sm rounded-xl p-4 border border-border/50"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
-              <Radio className="w-3 h-3 text-primary" />
-            </div>
-            <h3 className="text-sm font-semibold text-foreground">Station Info</h3>
-          </div>
-
-          <div className="space-y-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Format:</span>
-              <span className="text-foreground font-medium">HLS</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Quality:</span>
-              <span className="text-foreground font-medium">HD</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Genre:</span>
-              <span className="text-foreground font-medium">Dance</span>
-            </div>
-            {displayListeners > 0 && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Listeners:</span>
-                <span className="text-foreground font-medium">{displayListeners.toLocaleString()}</span>
-              </div>
-            )}
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Status:</span>
-              <span className="text-green-600 font-medium text-xs">● Online</span>
-            </div>
-          </div>
-        </motion.div>
+       
       </div>
     </div>
   )
