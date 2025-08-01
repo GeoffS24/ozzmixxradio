@@ -231,6 +231,21 @@ export const radioStationType = defineType({
         }),
       ],
     }),
+    
+    // Copyright Information
+    defineField({
+      name: 'copyright',
+      title: 'Copyright Information',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'text',
+          title: 'Copyright Text',
+          type: 'string',
+          initialValue: '© 2025 Radio Station. All rights reserved.',
+        }),
+      ],
+    }),
   ],
   preview: {
     select: {

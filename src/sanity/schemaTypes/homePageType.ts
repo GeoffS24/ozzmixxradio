@@ -369,6 +369,29 @@ export const homePageType = defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'backgroundColor',
+          title: 'Background Color',
+          type: 'string',
+          description: 'Background color for the section (default: gradient)',
+          initialValue: '',
+        }),
+        defineField({
+          name: 'visualElementImage',
+          title: 'Visual Element Image',
+          type: 'image',
+          description: 'Image for the visual element (phone mockup)',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+            }),
+          ],
+        }),
       ],
     }),
   ],

@@ -130,7 +130,7 @@ export function useRadioPlayer({
   statusApiUrl,
   defaultVolume = 50,
   autoPlay = false, // TODO: Implement autoPlay functionality
-  updateInterval = 10000, // 10 seconds
+  updateInterval = 3000, // 3 seconds
 }: UseRadioPlayerProps) {
   // Suppress unused variable warning for autoPlay - will be implemented later
   void autoPlay;

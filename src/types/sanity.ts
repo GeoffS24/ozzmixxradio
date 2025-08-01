@@ -97,6 +97,8 @@ export interface AppDownloadSectionData {
   androidUrl?: string
   iosUrl?: string
   backgroundImage?: SanityImage
+  backgroundColor?: string
+  visualElementImage?: SanityImage
 }
 
 // About Page Types
@@ -184,6 +186,9 @@ export interface RadioStationData {
   socialMedia?: SocialMedia
   seoSettings?: SEOSettings
   analytics?: Analytics
+  copyright?: {
+    text?: string
+  }
 }
 
 export interface RadioConfig {

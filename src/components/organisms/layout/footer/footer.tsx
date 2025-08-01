@@ -16,7 +16,7 @@ export function Footer({ stationData }: FooterProps) {
           <FooterNavLinks />
         </div>
         <div className="w-full h-px bg-border"></div>
-        <FooterBottom />
+        <FooterBottom copyrightText={stationData?.copyright?.text} />
       </div>
     </footer>
   )

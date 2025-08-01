@@ -72,6 +72,13 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == 'homePage' && _id == 'hom
         url
       },
       alt
+    },
+    backgroundColor,
+    visualElementImage {
+      asset,
+      alt,
+      hotspot,
+      crop
     }
   },
   flashySections[] {
@@ -223,6 +230,9 @@ export const RADIO_STATION_QUERY = defineQuery(`*[_type == 'radioStation' && _id
   analytics {
     googleAnalyticsId,
     facebookPixelId
+  },
+  copyright {
+    text
   }
 }`);
 

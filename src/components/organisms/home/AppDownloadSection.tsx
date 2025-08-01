@@ -2,6 +2,9 @@ import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { AppDownloadButton } from '@/components/molecules/app/AppDownloadButton'
 import { Smartphone, Download } from 'lucide-react'
 
+import { urlFor } from '@/sanity/lib/image'
+import type { SanityImage } from '@/types/sanity'
+
 interface AppDownloadSectionData {
   enabled?: boolean
   badge?: string
@@ -9,12 +12,9 @@ interface AppDownloadSectionData {
   description?: string
   androidUrl?: string
   iosUrl?: string
-  backgroundImage?: {
-    asset?: {
-      _ref: string
-    }
-    alt?: string
-  }
+  backgroundImage?: SanityImage
+  backgroundColor?: string
+  visualElementImage?: SanityImage
 }
 
 interface AppDownloadSectionProps {
@@ -30,6 +30,9 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
     description: data?.description ?? 'Download our mobile app and enjoy your favorite dance music anywhere, anytime. Available for both Android and iOS devices.',
     androidUrl: data?.androidUrl ?? 'https://play.google.com/store/apps/details?id=com.ozzmix.radio&pcampaignid=web_share',
     iosUrl: data?.iosUrl ?? 'https://apps.apple.com/us/app/ozzmixx-dance-radio/id6477762868?platform=iphone',
+    backgroundImage: data?.backgroundImage,
+    backgroundColor: data?.backgroundColor,
+    visualElementImage: data?.visualElementImage,
   }
 
   // Don't render if disabled
@@ -37,8 +40,13 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
     return null
   }
 
+  // Determine background styling
+  const backgroundStyle = sectionData.backgroundColor
+    ? { backgroundColor: sectionData.backgroundColor }
+    : { background: 'linear-gradient(to bottom right, hsl(var(--primary) / 0.1), hsl(var(--background)), hsl(var(--primary) / 0.05))' }
+
   return (
-    <section className="relative py-16 lg:py-20 px-5 bg-gradient-to-br from-primary/10 via-background to-primary/5 overflow-hidden">
+    <section className="relative py-16 lg:py-20 px-5 overflow-hidden" style={backgroundStyle}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,theme(colors.primary)_0%,transparent_50%)]" />
@@ -97,63 +105,77 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
           {/* Visual Element */}
           <div className="flex-1 flex justify-center lg:justify-end">
             <div className="relative">
-              {/* Phone Mockup */}
-              <div className="relative w-64 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-[3rem] p-2 shadow-2xl">
-                {/* Screen */}
-                <div className="w-full h-full bg-gradient-to-b from-primary/20 to-primary/10 rounded-[2.5rem] p-6 flex flex-col items-center justify-center relative overflow-hidden">
-                  {/* App Interface Mockup */}
-                  <div className="text-center space-y-4">
-                    {/* Logo */}
-                    <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto">
-                      <span className="text-white font-bold text-xl">OZ</span>
-                    </div>
-                    
-                    {/* App Name */}
-                    <div className="text-white">
-                      <h3 className="font-bold text-lg">OZZ Dance Radio</h3>
-                      <p className="text-white/70 text-sm">Live Electronic Music</p>
-                    </div>
-
-                    {/* Play Button */}
-                    <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                      <div className="w-0 h-0 border-l-[12px] border-l-white border-y-[8px] border-y-transparent ml-1" />
-                    </div>
-
-                    {/* Track Info */}
-                    <div className="text-center text-white/80 text-xs">
-                      <p className="font-medium">Now Playing</p>
-                      <p className="text-white/60">Electronic Vibes Mix</p>
-                    </div>
-
-                    {/* Visualizer */}
-                    <div className="flex items-center justify-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="w-1 bg-white/60 rounded-full animate-pulse"
-                          style={{
-                            height: `${Math.random() * 20 + 10}px`,
-                            animationDelay: `${i * 0.1}s`,
-                            animationDuration: `${0.5 + Math.random() * 0.5}s`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Floating Music Notes */}
-                  <div className="absolute top-4 right-4 text-white/30 animate-bounce">♪</div>
-                  <div className="absolute bottom-20 left-4 text-white/20 animate-bounce delay-300">♫</div>
-                  <div className="absolute top-1/3 left-2 text-white/25 animate-bounce delay-700">♪</div>
+              {sectionData.visualElementImage?.asset ? (
+                // Custom Image
+                <div className="relative w-64 h-[500px] flex items-center justify-center">
+                  <img
+                    src={urlFor(sectionData.visualElementImage).url()}
+                    alt={sectionData.visualElementImage.alt || 'App Visual Element'}
+                    className="max-w-full max-h-full object-contain"
+                  />
                 </div>
-
-                {/* Phone Details */}
-                <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gray-600 rounded-full" />
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gray-700 rounded-full" />
-              </div>
-
-              {/* Glow Effect */}
-              <div className="absolute inset-0 bg-primary/20 rounded-[3rem] blur-3xl -z-10 animate-pulse" />
+              ) : (
+                // Default Phone Mockup
+                <>
+                  {/* Phone Mockup */}
+                  <div className="relative w-64 h-[500px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-[3rem] p-2 shadow-2xl">
+                    {/* Screen */}
+                    <div className="w-full h-full bg-gradient-to-b from-primary/20 to-primary/10 rounded-[2.5rem] p-6 flex flex-col items-center justify-center relative overflow-hidden">
+                      {/* App Interface Mockup */}
+                      <div className="text-center space-y-4">
+                        {/* Logo */}
+                        <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto">
+                          <span className="text-white font-bold text-xl">OZ</span>
+                        </div>
+                        
+                        {/* App Name */}
+                        <div className="text-white">
+                          <h3 className="font-bold text-lg">OZZ Dance Radio</h3>
+                          <p className="text-white/70 text-sm">Live Electronic Music</p>
+                        </div>
+    
+                        {/* Play Button */}
+                        <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                          <div className="w-0 h-0 border-l-[12px] border-l-white border-y-[8px] border-y-transparent ml-1" />
+                        </div>
+    
+                        {/* Track Info */}
+                        <div className="text-center text-white/80 text-xs">
+                          <p className="font-medium">Now Playing</p>
+                          <p className="text-white/60">Electronic Vibes Mix</p>
+                        </div>
+    
+                        {/* Visualizer */}
+                        <div className="flex items-center justify-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="w-1 bg-white/60 rounded-full animate-pulse"
+                              style={{
+                                height: `${Math.random() * 20 + 10}px`,
+                                animationDelay: `${i * 0.1}s`,
+                                animationDuration: `${0.5 + Math.random() * 0.5}s`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+    
+                      {/* Floating Music Notes */}
+                      <div className="absolute top-4 right-4 text-white/30 animate-bounce">♪</div>
+                      <div className="absolute bottom-20 left-4 text-white/20 animate-bounce delay-300">♫</div>
+                      <div className="absolute top-1/3 left-2 text-white/25 animate-bounce delay-700">♪</div>
+                    </div>
+    
+                    {/* Phone Details */}
+                    <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gray-600 rounded-full" />
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gray-700 rounded-full" />
+                  </div>
+    
+                  {/* Glow Effect */}
+                  <div className="absolute inset-0 bg-primary/20 rounded-[3rem] blur-3xl -z-10 animate-pulse" />
+                </>
+              )}
             </div>
           </div>
         </div>
