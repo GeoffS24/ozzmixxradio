@@ -147,10 +147,16 @@ export function GoogleAdsense({
         strategy="afterInteractive"
       />
       
-      <div ref={adRef} className={cn("google-ad-container", className)}>
+      <div ref={adRef} className={cn("google-ad-container w-full", className)}>
         <ins
           className="adsbygoogle"
-          style={style}
+          style={{
+            display: 'block',
+            width: '100%',
+            minWidth: '300px',
+            minHeight: '250px',
+            ...style
+          }}
           data-ad-client={adClient}
           data-ad-slot={adSlot}
           data-ad-format={adFormat}

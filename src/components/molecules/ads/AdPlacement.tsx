@@ -70,9 +70,9 @@ export function AdPlacement({
   const placementClass = getPlacementStyles(placement)
 
   return (
-    <div 
+    <div
       className={cn(
-        "ad-placement flex justify-center items-center",
+        "ad-placement flex justify-center items-center w-full",
         placementClass,
         // Responsive visibility
         !adSlot.showOnMobile && "hidden md:flex",
@@ -82,6 +82,10 @@ export function AdPlacement({
       )}
       data-ad-placement={placement}
       data-ad-name={adSlot.name}
+      style={{
+        minWidth: adSlot.format === 'auto' ? '300px' : dimensions.width,
+        minHeight: adSlot.format === 'auto' ? '250px' : dimensions.height,
+      }}
     >
       <GoogleAdsense
         adClient={adClient}
@@ -89,12 +93,14 @@ export function AdPlacement({
         adFormat={adSlot.format}
         style={{
           display: 'block',
-          width: dimensions.width,
-          height: dimensions.height,
+          width: adSlot.format === 'auto' ? '100%' : dimensions.width,
+          height: adSlot.format === 'auto' ? 'auto' : dimensions.height,
+          minWidth: '300px',
+          minHeight: '250px',
         }}
         testMode={testMode}
         lazyLoading={lazyLoading}
-        className="max-w-full"
+        className="w-full"
       />
     </div>
   )
