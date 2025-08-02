@@ -141,10 +141,21 @@ export function GoogleAdsense({
   return (
     <>
       <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
-        crossOrigin="anonymous"
+        id={`adsense-${adClient}`}
         strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+                var script = document.createElement('script');
+                script.async = true;
+                script.crossOrigin = 'anonymous';
+                script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}';
+                document.head.appendChild(script);
+              }
+            })();
+          `
+        }}
       />
       
       <div ref={adRef} className={cn("google-ad-container w-full", className)}>
