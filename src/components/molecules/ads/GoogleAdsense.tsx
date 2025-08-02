@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { cn } from '@/lib/utils'
 
@@ -33,8 +33,44 @@ export function GoogleAdsense({
 }: GoogleAdsenseProps) {
   const adRef = useRef<HTMLDivElement>(null)
   const isLoaded = useRef(false)
+  const [scriptReady, setScriptReady] = useState(false)
+
+  // Check for script readiness
+  useEffect(() => {
+    const checkScript = () => {
+      if (typeof window !== 'undefined' && window.adsbygoogle) {
+        console.log('[AdSense] Script is ready')
+        setScriptReady(true)
+        return true
+      }
+      return false
+    }
+
+    // Check immediately
+    if (checkScript()) return
+
+    // Poll for script availability
+    const interval = setInterval(() => {
+      if (checkScript()) {
+        clearInterval(interval)
+      }
+    }, 100)
+
+    // Cleanup after 10 seconds
+    const timeout = setTimeout(() => {
+      clearInterval(interval)
+      console.error('[AdSense] Script loading timeout after 10 seconds')
+    }, 10000)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeout)
+    }
+  }, [])
 
   useEffect(() => {
+    if (!scriptReady) return
+
     if (!lazyLoading) {
       loadAd()
       return
@@ -58,18 +94,30 @@ export function GoogleAdsense({
     }
 
     return () => observer.disconnect()
-  }, [lazyLoading])
+  }, [lazyLoading, scriptReady])
 
   const loadAd = () => {
     if (isLoaded.current) return
-    
+
+    console.log(`[AdSense] Attempting to load ad - Client: ${adClient}, Slot: ${adSlot}, Format: ${adFormat}`)
+
     try {
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
+      if (typeof window !== 'undefined') {
+        if (!window.adsbygoogle) {
+          console.error('[AdSense] adsbygoogle array not found. Script may not be loaded.')
+          // Try to initialize the array
+          window.adsbygoogle = window.adsbygoogle || []
+          console.log('[AdSense] Initialized adsbygoogle array')
+        }
+
+        console.log('[AdSense] Pushing ad to adsbygoogle array')
         window.adsbygoogle.push({})
         isLoaded.current = true
+        console.log('[AdSense] Ad loaded successfully')
       }
     } catch (error) {
-      console.error('Error loading Google AdSense ad:', error)
+      console.error('[AdSense] Error loading Google AdSense ad:', error)
+      console.error('[AdSense] Ad details:', { adClient, adSlot, adFormat, testMode })
     }
   }
 

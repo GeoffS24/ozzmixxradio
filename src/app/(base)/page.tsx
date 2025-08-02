@@ -6,6 +6,7 @@ import { ScheduleSection } from "@/components/organisms/home/scheduleSection";
 import { AppDownloadSection } from "@/components/organisms/home/AppDownloadSection";
 import { FlashySection } from "@/components/organisms/home/FlashySection";
 import { AdsManager } from "@/components/organisms/ads/AdsManager";
+import { AdDebugger } from "@/components/debug/AdDebugger";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HOME_PAGE_QUERY, SCHEDULE_QUERY, POSTS_QUERY, RADIO_STATION_QUERY } from "@/sanity/lib/queries/homeQueries";
 import type { HomePageData, ScheduleData, BlogPost, RadioStationData } from "@/types/sanity";
@@ -74,6 +75,9 @@ export default async function Home() {
 
       {/* Ad Placement - Footer */}
       <AdsManager adsData={homePage?.googleAds} placement="footer" />
+
+      {/* Ad Debugger - Remove this in production */}
+      {/* <AdDebugger adsData={homePage?.googleAds} /> */}
     </div>
   );
 }
