@@ -415,24 +415,20 @@ export function useRadioPlayer({
     }
   }, [statusApiUrl])
 
-  // Start/stop track info updates
+  // Start track info updates immediately on mount and continue while playing
   useEffect(() => {
-    if (state.isPlaying) {
-      fetchTrackInfo() // Fetch immediately
-      statusIntervalRef.current = setInterval(fetchTrackInfo, updateInterval)
-    } else {
-      if (statusIntervalRef.current) {
-        clearInterval(statusIntervalRef.current)
-        statusIntervalRef.current = null
-      }
-    }
+    // Always fetch track info immediately on mount
+    fetchTrackInfo()
+
+    // Set up interval for continuous updates
+    statusIntervalRef.current = setInterval(fetchTrackInfo, updateInterval)
 
     return () => {
       if (statusIntervalRef.current) {
         clearInterval(statusIntervalRef.current)
       }
     }
-  }, [state.isPlaying, fetchTrackInfo, updateInterval])
+  }, [fetchTrackInfo, updateInterval])
 
   // Player controls
   const play = useCallback(async () => {
@@ -441,7 +437,6 @@ export function useRadioPlayer({
     }
 
     try {
-      console.log('Attempting to play stream:', streamUrl)
       setState(prev => ({ ...prev, error: null, isLoading: true }))
 
       // Check if we already have an HLS instance and audio source

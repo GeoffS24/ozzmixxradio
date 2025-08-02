@@ -226,7 +226,6 @@ export function SimpleRadioPlayer({
 
             <motion.button
               onClick={() => {
-                console.log('Toggle play clicked, isPlaying:', isPlaying)
                 togglePlay?.()
               }}
               disabled={isLoading || !togglePlay}
