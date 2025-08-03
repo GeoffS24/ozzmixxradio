@@ -29,6 +29,9 @@ export async function generateMetadata(): Promise<Metadata> {
     description: seoSettings?.metaDescription || station?.description || "Your favorite dance music station",
     keywords: seoSettings?.keywords || ["dance music", "electronic music", "radio station"],
     authors: [{ name: station?.title || "OZZ Dance Radio" }],
+    verification: {
+      google: "QPRuL3txllBLq1VHKyOnUznD9if4QlYkn3oK96Jd9K0",
+    },
     openGraph: {
       title: seoSettings?.metaTitle || station?.title || "OZZ Dance Radio",
       description: seoSettings?.metaDescription || station?.description || "Your favorite dance music station",
