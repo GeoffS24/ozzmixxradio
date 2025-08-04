@@ -242,6 +242,7 @@ export function PersistentMiniPlayer() {
               )}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              aria-label={isPlaying ? "Pause radio" : "Play radio"}
             >
               {isLoading ? (
                 <motion.div 
@@ -265,6 +266,7 @@ export function PersistentMiniPlayer() {
               className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              aria-label={isMinimized ? "Expand player" : "Minimize player"}
             >
               {isMinimized ? (
                 <ChevronUp className="w-4 h-4 text-muted-foreground" />
@@ -282,6 +284,7 @@ export function PersistentMiniPlayer() {
               className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Close player"
             >
               <X className="w-4 h-4 text-muted-foreground" />
             </motion.button>
@@ -307,6 +310,7 @@ export function PersistentMiniPlayer() {
                     className="p-2 rounded-full hover:bg-muted transition-colors disabled:opacity-50"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
+                    aria-label="Decrease volume"
                   >
                     <Volume1 className="w-4 h-4 text-muted-foreground" />
                   </motion.button>
@@ -328,6 +332,7 @@ export function PersistentMiniPlayer() {
                     className="p-2 rounded-full hover:bg-muted transition-colors disabled:opacity-50"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
+                    aria-label="Increase volume"
                   >
                     <VolumeIcon className="w-4 h-4 text-muted-foreground" />
                   </motion.button>

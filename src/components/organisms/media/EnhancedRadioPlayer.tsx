@@ -278,6 +278,7 @@ export function EnhancedRadioPlayer({
                 disabled={volume === 0}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label="Decrease volume"
               >
                 <Volume1 className="w-5 h-5 text-muted-foreground" />
               </motion.button>
@@ -293,6 +294,7 @@ export function EnhancedRadioPlayer({
                   "shadow-xl hover:shadow-2xl",
                   "border-2 border-primary/20"
                 )}
+                aria-label={isPlaying ? "Pause radio" : "Play radio"}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 animate={isPlaying ? {
@@ -340,6 +342,7 @@ export function EnhancedRadioPlayer({
                 disabled={volume === 100}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label="Increase volume"
               >
                 <VolumeIcon className="w-5 h-5 text-muted-foreground" />
               </motion.button>

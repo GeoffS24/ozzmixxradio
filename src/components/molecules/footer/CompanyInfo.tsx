@@ -27,13 +27,13 @@ export function CompanyInfo({ stationData }: CompanyInfoProps) {
       <ContactInfo title="Contact:">
         <a
           href={`tel:${phone.replace(/\s/g, '')}`}
-          className="text-xs lg:text-sm font-normal leading-[150%] text-foreground underline hover:text-primary"
+          className="text-xs lg:text-sm font-normal leading-[150%] text-foreground underline hover:text-primary py-2 min-h-[44px] flex items-center"
         >
           {phone}
         </a>
         <a
           href={`mailto:${email}`}
-          className="text-xs lg:text-sm font-normal leading-[150%] text-foreground underline hover:text-primary"
+          className="text-xs lg:text-sm font-normal leading-[150%] text-foreground underline hover:text-primary py-2 min-h-[44px] flex items-center"
         >
           {email}
         </a>

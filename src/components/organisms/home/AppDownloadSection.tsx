@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { AppDownloadButton } from '@/components/molecules/app/AppDownloadButton'
 import { Smartphone, Download } from 'lucide-react'
@@ -123,10 +124,20 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
               {sectionData.visualElementImage?.asset ? (
                 // Custom Image
                 <div className="relative w-64 h-[500px] flex items-center justify-center">
-                  <img
-                    src={urlFor(sectionData.visualElementImage).url()}
+                  <Image
+                    src={urlFor(sectionData.visualElementImage)
+                      .width(256)
+                      .height(500)
+                      .format('webp')
+                      .quality(85)
+                      .url()}
                     alt={sectionData.visualElementImage.alt || 'App Visual Element'}
+                    width={256}
+                    height={500}
                     className="max-w-full max-h-full object-contain"
+                    priority={false}
+                    loading="lazy"
+                    sizes="(max-width: 768px) 200px, 256px"
                   />
                 </div>
               ) : (
