@@ -5,7 +5,7 @@ import { Music } from 'lucide-react'
 import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
 import { SimpleRadioPlayer } from '@/components/organisms/media/SimpleRadioPlayer'
 import { NowPlayingInfo } from '@/components/organisms/media/NowPlayingInfo'
-import { useRadioPlayer } from '@/lib/hooks/useRadioPlayer'
+import { useGlobalRadioPlayer } from '@/contexts/RadioPlayerContext'
 import { urlFor } from '@/sanity/lib/image'
 import type { RadioStationData } from '@/types/sanity'
 
@@ -45,13 +45,8 @@ export function MusicSection({ data, radioStationData }: MusicSectionProps) {
     statusApiUrl: statusApiUrl,
   }
 
-  // Single radio player hook to share data between components
-  const radioPlayerData = useRadioPlayer({
-    streamUrl: sectionData.radioStreamUrl,
-    statusApiUrl: sectionData.statusApiUrl,
-    defaultVolume: radioStationData?.radioConfig?.defaultVolume ?? 50,
-    autoPlay: radioStationData?.radioConfig?.autoPlay ?? false,
-  })
+  // Use global radio player context
+  const radioPlayerData = useGlobalRadioPlayer()
 
   if (!sectionData.enabled) {
     return null

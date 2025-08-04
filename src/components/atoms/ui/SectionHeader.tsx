@@ -6,6 +6,7 @@ interface SectionHeaderProps {
   description?: string
   alignment?: 'left' | 'center'
   className?: string
+  invert?: boolean
 }
 
 export function SectionHeader({ 
@@ -13,7 +14,8 @@ export function SectionHeader({
   title, 
   description, 
   alignment = 'center',
-  className 
+  className ,
+  invert = false
 }: SectionHeaderProps) {
   const alignmentClasses = {
     left: "items-start lg:items-start text-left",
@@ -29,8 +31,9 @@ export function SectionHeader({
       {badge && (
         <div className="flex items-center w-full">
           <span className={cn(
-            "text-base font-bold text-primary",
-            alignment === 'center' && "text-center w-full"
+            "text-base font-bold !text-primary",
+            alignment === 'center' && "text-center w-full " ,
+           invert && "invert-100"
           )}>
             {badge}
           </span>

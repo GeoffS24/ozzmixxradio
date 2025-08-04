@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NewsDetail } from "@/components/organisms/news/NewsDetail";
+import { ShowPlayerButton } from "@/components/atoms/ui/ShowPlayerButton";
 import { sanityFetch } from "@/sanity/lib/live";
 import { SINGLE_POST_QUERY, RELATED_POSTS_QUERY } from "@/sanity/lib/queries/newsQueries";
 import { urlFor } from "@/sanity/lib/image";
@@ -112,6 +113,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
         post={post}
         baseUrl={process.env.NEXT_PUBLIC_SITE_URL || 'https://ozzmixxradio.com/'}
       />
+      <ShowPlayerButton />
     </div>
   );
 }

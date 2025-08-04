@@ -41,12 +41,25 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
   }
 
   // Determine background styling
-  const backgroundStyle = sectionData.backgroundColor
-    ? { backgroundColor: sectionData.backgroundColor }
-    : { background: 'linear-gradient(to bottom right, hsl(var(--primary) / 0.1), hsl(var(--background)), hsl(var(--primary) / 0.05))' }
+  const getBackgroundStyle = () => {
+    if (sectionData.backgroundImage?.asset) {
+      return {
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${urlFor(sectionData.backgroundImage).url()})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }
+    }
+    if (sectionData.backgroundColor) {
+      return { backgroundColor: sectionData.backgroundColor }
+    }
+    return {
+      background: 'linear-gradient(to bottom right, hsl(var(--primary) / 0.1), hsl(var(--background)), hsl(var(--primary) / 0.05))'
+    }
+  }
 
   return (
-    <section className="relative py-16 lg:py-20 px-5 overflow-hidden" style={backgroundStyle}>
+    <section className="relative py-16 lg:py-20 px-5 overflow-hidden" style={getBackgroundStyle()}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,theme(colors.primary)_0%,transparent_50%)]" />
@@ -67,6 +80,8 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
               title={sectionData.title}
               description={sectionData.description}
               alignment="left"
+              className='invert'
+              invert={true}
             />
 
             {/* App Download Buttons */}
@@ -74,30 +89,30 @@ export function AppDownloadSection({ data }: AppDownloadSectionProps) {
               <AppDownloadButton
                 platform="android"
                 url={sectionData.androidUrl}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto invert"
               />
               <AppDownloadButton
                 platform="ios"
                 url={sectionData.iosUrl}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto invert"
               />
             </div>
 
             {/* Features List */}
             <div className="flex flex-col sm:flex-row gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ">
                 <Download className="w-4 h-4 text-primary" />
-                <span>Free Download</span>
+                <span className='invert'>Free Download</span>
               </div>
               <div className="flex items-center gap-2">
                 <Smartphone className="w-4 h-4 text-primary" />
-                <span>Works Offline</span>
+                <span className='invert'>Works Offline</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
                   <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
                 </div>
-                <span>Live Streaming</span>
+                <span className='invert'>Live Streaming</span>
               </div>
             </div>
           </div>

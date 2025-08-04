@@ -4,6 +4,8 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { RADIO_STATION_QUERY } from "@/sanity/lib/queries/homeQueries";
 import { RadioStationData } from "@/types";
 import { SEOTags } from "@/components/molecules/seo/SEOTags";
+import { RadioPlayerProvider } from "@/contexts/RadioPlayerContext";
+import { PersistentMiniPlayer } from "@/components/organisms/media/PersistentMiniPlayer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -55,6 +57,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch radio station data for global player
+  const { data: stationData } = await sanityFetch({
+    query: RADIO_STATION_QUERY,
+  });
+
   return (
     <html lang="en">
       <head>
@@ -63,7 +70,15 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main>{children}</main>
+        <RadioPlayerProvider
+          streamUrl={stationData?.radioConfig?.streamUrl || 'https://stream.ozzmixxradio.com/hls/ozzmixxradio/live.m3u8'}
+          statusApiUrl={stationData?.radioConfig?.statusApiUrl || 'https://stream.ozzmixxradio.com/api/nowplaying'}
+          defaultVolume={stationData?.radioConfig?.defaultVolume || 50}
+          autoPlay={stationData?.radioConfig?.autoPlay || false}
+        >
+          <main>{children}</main>
+          <PersistentMiniPlayer />
+        </RadioPlayerProvider>
       </body>
     </html>
   );

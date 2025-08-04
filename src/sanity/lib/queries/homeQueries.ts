@@ -67,11 +67,10 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == 'homePage' && _id == 'hom
     androidUrl,
     iosUrl,
     backgroundImage {
-      asset->{
-        _id,
-        url
-      },
-      alt
+      asset,
+      alt,
+      hotspot,
+      crop
     },
     backgroundColor,
     visualElementImage {
