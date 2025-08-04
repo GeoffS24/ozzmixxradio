@@ -52,8 +52,15 @@ export function ShowPlayerButton({
         variantClasses[variant],
         className
       )}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{
+        scale: 1.1,
+        rotate: 5,
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{
+        scale: 0.9,
+        rotate: -5
+      }}
       initial={{
         scale: 0,
         opacity: 0,
@@ -72,15 +79,6 @@ export function ShowPlayerButton({
         stiffness: 400,
         delay: 1.2,
         duration: 0.6
-      }}
-      whileHover={{
-        scale: 1.1,
-        rotate: 5,
-        transition: { duration: 0.2 }
-      }}
-      whileTap={{
-        scale: 0.9,
-        rotate: -5
       }}
     >
       {isPlaying ? (
