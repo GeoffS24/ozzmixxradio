@@ -6,6 +6,7 @@ import { RadioStationData } from "@/types";
 import { SEOTags } from "@/components/molecules/seo/SEOTags";
 import { RadioPlayerProvider } from "@/contexts/RadioPlayerContext";
 import { PersistentMiniPlayer } from "@/components/organisms/media/PersistentMiniPlayer";
+import { IubendaConsent } from "@/components/molecules/consent/IubendaConsent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -70,6 +71,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <IubendaConsent />
         <RadioPlayerProvider
           streamUrl={stationData?.radioConfig?.streamUrl || 'https://stream.ozzmixxradio.com/hls/ozzmixxradio/live.m3u8'}
           statusApiUrl={stationData?.radioConfig?.statusApiUrl || 'https://stream.ozzmixxradio.com/api/nowplaying'}

@@ -37,6 +37,26 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
   const rawTimezone = scheduleData?.timezone?.trim() || 'Australia/Melbourne';
   const stationTimezone = rawTimezone.replace(/,\s*Australia$/, '').trim() || 'Australia/Melbourne';
 
+  // Validate timezone on client side only
+  const [validTimezone, setValidTimezone] = useState<string>('Australia/Melbourne');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const supportedTimezones = Intl.supportedValuesOf('timeZone');
+        const isValid = supportedTimezones.includes(stationTimezone);
+        setValidTimezone(isValid ? stationTimezone : 'Australia/Melbourne');
+
+        if (!isValid) {
+          console.warn('Unsupported timezone:', stationTimezone, 'using Australia/Melbourne');
+        }
+      } catch (error) {
+        console.warn('Error validating timezone:', error);
+        setValidTimezone('Australia/Melbourne');
+      }
+    }
+  }, [stationTimezone]);
+
 
 
   useEffect(() => {
@@ -44,18 +64,11 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
       const now = new Date();
 
       try {
-        // Validate timezone first
-        const validTimezone = Intl.supportedValuesOf('timeZone').includes(stationTimezone)
-          ? stationTimezone
-          : 'Australia/Melbourne';
-
         // Get the current time in the station timezone
         const stationNow = new Date(now.toLocaleString("en-US", { timeZone: validTimezone }));
         setStationTime(stationNow);
-
-        
       } catch (error) {
-        console.warn('Invalid timezone:', stationTimezone, 'falling back to local time');
+        console.warn('Invalid timezone:', validTimezone, 'falling back to local time');
         setStationTime(now);
       }
     };
@@ -64,7 +77,7 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
     const interval = setInterval(updateTimes, 60000);
 
     return () => clearInterval(interval);
-  }, [stationTimezone]);
+  }, [validTimezone]);
 
 
   const dayNames = {
@@ -105,16 +118,10 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
     try {
       // Get current time in station timezone
       const now = new Date();
-      const validTimezone = Intl.supportedValuesOf('timeZone').includes(stationTimezone)
-        ? stationTimezone
-        : 'Australia/Melbourne';
-
       const stationNow = new Date(now.toLocaleString("en-US", { timeZone: validTimezone }));
       const currentTimeString = `${stationNow.getHours().toString().padStart(2, "0")}:${stationNow.getMinutes().toString().padStart(2, "0")}`;
 
       const isLive = currentTimeString >= timeSlot.startTime && currentTimeString < timeSlot.endTime;
-
-      
 
       return isLive;
     } catch (error) {
@@ -144,43 +151,21 @@ export function ScheduleSection({ data, scheduleData }: ScheduleSectionProps) {
             <span className="font-medium text-primary">
               {(() => {
                 try {
-                  // Validate timezone first
-                  if (!Intl.supportedValuesOf('timeZone').includes(stationTimezone)) {
-                    console.warn('Unsupported timezone:', stationTimezone, 'using Australia/Melbourne');
-                    const now = new Date();
-                    return now.toLocaleTimeString('en-AU', {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      timeZone: 'Australia/Melbourne',
-                      timeZoneName: "short",
-                    });
-                  }
-
                   // Get current time in station timezone
                   const now = new Date();
                   return now.toLocaleTimeString('en-AU', {
                     hour: "2-digit",
                     minute: "2-digit",
-                    timeZone: stationTimezone,
+                    timeZone: validTimezone,
                     timeZoneName: "short",
                   });
                 } catch (error) {
                   console.warn('Timezone display error:', error);
-                  // Fallback to Melbourne time
-                  const now = new Date();
-                  try {
-                    return now.toLocaleTimeString('en-AU', {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      timeZone: 'Australia/Melbourne',
-                      timeZoneName: "short",
-                    });
-                  } catch (fallbackError) {
-                    return stationTime.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    });
-                  }
+                  // Fallback to local time
+                  return stationTime.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
                 }
               })()}
             </span>

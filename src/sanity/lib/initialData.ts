@@ -112,13 +112,13 @@ export const initialHomePageData = {
 
   // Google Ads Configuration
   googleAds: {
-    enabled: false, // Disabled by default
-    adClient: '', // To be filled by user
+    enabled: true, // Enable ads
+    adClient: 'ca-pub-4257061841065510', // Your AdSense client ID
     adSlots: [
       {
         name: 'Header Banner',
-        slotId: '',
-        format: 'leaderboard',
+        slotId: '2363301194',
+        format: 'auto',
         placement: 'header',
         enabled: false,
         showOnMobile: false,
@@ -126,17 +126,17 @@ export const initialHomePageData = {
       },
       {
         name: 'Content Top',
-        slotId: '',
-        format: 'rectangle',
+        slotId: '2363301194',
+        format: 'auto',
         placement: 'content-top',
-        enabled: false,
+        enabled: true,
         showOnMobile: true,
         showOnDesktop: true,
       },
       {
         name: 'Sidebar',
-        slotId: '',
-        format: 'skyscraper',
+        slotId: '2363301194',
+        format: 'auto',
         placement: 'sidebar',
         enabled: false,
         showOnMobile: false,
@@ -144,10 +144,19 @@ export const initialHomePageData = {
       },
       {
         name: 'Content Bottom',
-        slotId: '',
-        format: 'large-rectangle',
+        slotId: '2363301194',
+        format: 'auto',
         placement: 'content-bottom',
-        enabled: false,
+        enabled: true,
+        showOnMobile: true,
+        showOnDesktop: true,
+      },
+      {
+        name: 'Between Sections',
+        slotId: '2363301194',
+        format: 'auto',
+        placement: 'between-sections',
+        enabled: true,
         showOnMobile: true,
         showOnDesktop: true,
       },
@@ -155,7 +164,7 @@ export const initialHomePageData = {
     settings: {
       lazyLoading: true,
       refreshInterval: 0,
-      testMode: true, // Enable for development
+      testMode: true, // Enable test mode for development
       blockedCategories: ['gambling', 'adult'],
     },
     analytics: {
