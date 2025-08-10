@@ -352,15 +352,6 @@ export function PersistentMiniPlayer() {
                     )} />
                     <span>{isConnected ? "Connected" : "Disconnected"}</span>
                   </div>
-
-                  {/* Listener Count */}
-                  {displayListeners > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      <span>{displayListeners.toLocaleString()} listening</span>
-                    </div>
-                  )}
-
                   {/* Live Streamer */}
                   {isLive && streamerName && (
                     <div className="flex items-center gap-1">

@@ -11,16 +11,10 @@ interface AdsManagerProps {
 
 export function AdsManager({ adsData, placement, className }: AdsManagerProps) {
   // Debug logging
-  console.log(`[AdsManager] ${placement}:`, {
-    hasAdsData: !!adsData,
-    enabled: adsData?.enabled,
-    hasClient: !!adsData?.adClient,
-    adSlotsCount: adsData?.adSlots?.length || 0
-  })
+ 
 
   // Don't render if ads are disabled or no data
   if (!adsData?.enabled || !adsData.adClient) {
-    console.log(`[AdsManager] ${placement}: Not rendering - ads disabled or no client ID`)
     return null
   }
 
@@ -28,14 +22,6 @@ export function AdsManager({ adsData, placement, className }: AdsManagerProps) {
   const placementAds = adsData.adSlots?.filter(
     (ad) => ad.placement === placement && ad.enabled
   ) || []
-
-  console.log(`[AdsManager] ${placement}: Found ${placementAds.length} enabled ads for this placement`)
-  console.log(`[AdsManager] ${placement}: Available slots:`, adsData.adSlots?.map(slot => ({
-    name: slot.name,
-    placement: slot.placement,
-    enabled: slot.enabled,
-    slotId: slot.slotId
-  })))
 
   if (placementAds.length === 0) {
     return null
