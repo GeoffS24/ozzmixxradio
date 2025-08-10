@@ -65,7 +65,7 @@ export function NextPlayingCard({
         {/* Album Art */}
         <div className="flex-shrink-0">
           {playingNext.song.art ? (
-            <Image
+            <img
               width={48}
               height={48}
               src={playingNext.song.art}

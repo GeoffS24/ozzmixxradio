@@ -77,7 +77,7 @@ export function SongHistoryList({
             {/* Album Art */}
             <div className="flex-shrink-0">
               {item.song.art ? (
-                <Image
+                <img
                   width={32}
                   height={32}
                   src={item.song.art}

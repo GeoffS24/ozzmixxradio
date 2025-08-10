@@ -68,7 +68,7 @@ export function NowPlayingInfo({
           <div className="flex gap-3">
             {/* Album Art */}
             <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-              <Image
+              <img
                 src={displayArt}
                 alt={`${displayTitle} artwork`}
                 width={64}

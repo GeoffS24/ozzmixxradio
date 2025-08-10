@@ -81,7 +81,7 @@ export function SimpleRadioPlayer({
               
               {/* Main album art */}
               <div className="relative">
-                <Image
+                <img
                   src={displayArt}
                   alt={`${displayTitle} artwork`}
                   width={400}
