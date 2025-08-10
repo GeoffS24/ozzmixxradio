@@ -6,6 +6,7 @@ import { RadioStationData } from "@/types";
 import { SEOTags } from "@/components/molecules/seo/SEOTags";
 import { RadioPlayerProvider } from "@/contexts/RadioPlayerContext";
 import { PersistentMiniPlayer } from "@/components/organisms/media/PersistentMiniPlayer";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -66,6 +67,13 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <SEOTags canonicalUrl={process.env.NEXT_PUBLIC_SITE_URL} />
+        <Script
+          id="adsense-global"
+          strategy="afterInteractive"
+          async
+          crossOrigin="anonymous"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-4257061841065510'}`}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

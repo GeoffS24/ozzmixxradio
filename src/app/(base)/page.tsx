@@ -77,7 +77,7 @@ export default async function Home() {
       <AdsManager adsData={homePage?.googleAds} placement="footer" />
 
       {/* Ad Debugger - Remove this in production */}
-      <AdDebugger adsData={homePage?.googleAds} />
+      {/* <AdDebugger adsData={homePage?.googleAds} /> */}
     </div>
   );
 }

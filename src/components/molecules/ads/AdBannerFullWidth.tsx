@@ -10,7 +10,6 @@ type AdBannerTypes = {
 
 declare global {
   interface Window {
-    _iub: any;
     adsbygoogle: any[];
   }
 }
@@ -21,41 +20,17 @@ const AdBannerFullWidth = ({
   defaultFullWidthResponsive = true
 }: AdBannerTypes) => {
   const adRef = useRef<HTMLModElement>(null);
-  const [consentGiven, setConsentGiven] = useState(false);
-
-  // Check for consent
-  useEffect(() => {
-    const handleConsentGiven = () => {
-      setConsentGiven(true);
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('iubenda_consent_given', handleConsentGiven);
-      window.addEventListener('iubenda_consent_given_purpose_1', handleConsentGiven);
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('iubenda_consent_given', handleConsentGiven);
-        window.removeEventListener('iubenda_consent_given_purpose_1', handleConsentGiven);
-      }
-    };
-  }, []);
 
   useEffect(() => {
-    if (!consentGiven) return;
     if (adRef.current?.getAttribute("data-ad-status") === "filled") {
       return;
     }
     try {
-      ((window as any).adsbygoogle =
-        (window as any).adsbygoogle || []).push({});
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (error) {
       console.error("Ad push error:", error);
     }
-  }, [consentGiven, dataAdSlot]);
-
-  if (!consentGiven) return null;
+  }, [dataAdSlot]);
 
   return (
     <div

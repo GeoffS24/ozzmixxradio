@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { cn } from '@/lib/utils'
 
@@ -17,7 +17,6 @@ interface GoogleAdsenseProps {
 
 declare global {
   interface Window {
-    _iub: any
     adsbygoogle: any[]
   }
 }
@@ -33,164 +32,74 @@ export function GoogleAdsense({
   lazyLoading = true,
 }: GoogleAdsenseProps) {
   const adRef = useRef<HTMLDivElement>(null)
+  const insRef = useRef<HTMLModElement>(null)
+
   const isLoaded = useRef(false)
   const [scriptReady, setScriptReady] = useState(false)
-  const [consentGiven, setConsentGiven] = useState(false)
-
-  // Check for consent
-  useEffect(() => {
-    const handleConsentGiven = () => {
-      setConsentGiven(true)
-    }
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('iubenda_consent_given', handleConsentGiven)
-      window.addEventListener('iubenda_consent_given_purpose_1', handleConsentGiven)
-
-      // Check if consent was already given
-      if (window._iub && window._iub.cs && window._iub.cs.api && window._iub.cs.api.isConsentGiven()) {
-        setConsentGiven(true)
-      }
-
-      // For testing: temporarily allow ads without consent in development
-      if (process.env.NODE_ENV === 'development' || testMode) {
-        setConsentGiven(true)
-      }
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('iubenda_consent_given', handleConsentGiven)
-        window.removeEventListener('iubenda_consent_given_purpose_1', handleConsentGiven)
-      }
-    }
-  }, [testMode])
 
   // Check for script readiness
   useEffect(() => {
-    if (!consentGiven) return
+    // Proceed always (no CMP gating)
 
     const checkScript = () => {
       if (typeof window !== 'undefined' && window.adsbygoogle) {
-        console.log('[AdSense] Script is ready')
         setScriptReady(true)
         return true
       }
       return false
     }
 
-    // Check immediately
     if (checkScript()) return
 
-    // Poll for script availability
     const interval = setInterval(() => {
       if (checkScript()) {
         clearInterval(interval)
       }
     }, 100)
 
-    // Cleanup after 10 seconds
     const timeout = setTimeout(() => {
       clearInterval(interval)
-      console.error('[AdSense] Script loading timeout after 10 seconds')
     }, 10000)
 
     return () => {
       clearInterval(interval)
       clearTimeout(timeout)
     }
-  }, [consentGiven])
+  }, [])
+  const loadAd = useCallback(() => {
+    if (isLoaded.current) return
 
-  useEffect(() => {
-    if (!consentGiven || !scriptReady) return
+    const insEl = insRef.current as HTMLElement | null
+    if (!insEl) return
 
-    if (!lazyLoading) {
-      loadAd()
+    // Avoid duplicate pushes (StrictMode double effects, re-renders)
+    if (insEl.getAttribute('data-ad-initialized') === 'true') return
+    const status = insEl.getAttribute('data-ad-status')
+    if (status === 'filled') {
+      isLoaded.current = true
       return
     }
 
-    // Intersection Observer for lazy loading
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !isLoaded.current) {
-            loadAd()
-            observer.disconnect()
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    if (adRef.current) {
-      observer.observe(adRef.current)
-    }
-
-    return () => {
-      if (observer && observer.disconnect) {
-        observer.disconnect()
-      }
-    }
-  }, [consentGiven, lazyLoading, scriptReady])
-
-  const loadAd = () => {
-    if (isLoaded.current || !consentGiven) return
-    if (adRef.current?.getAttribute("data-ad-status") === "filled") {
-      return
-    }
-
-    console.log(`[AdSense] Attempting to load ad - Client: ${adClient}, Slot: ${adSlot}, Format: ${adFormat}`)
+    // Mark initialized before pushing to avoid double push
+    insEl.setAttribute('data-ad-initialized', 'true')
+    isLoaded.current = true
 
     try {
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
-        console.log('[AdSense] Pushing ad to adsbygoogle array')
+      if (typeof window !== 'undefined') {
+        window.adsbygoogle = window.adsbygoogle || []
         window.adsbygoogle.push({})
-        isLoaded.current = true
-        console.log('[AdSense] Ad loaded successfully')
-      } else {
-        console.error('[AdSense] adsbygoogle array not found. Script may not be loaded.')
       }
     } catch (error) {
       console.error('[AdSense] Error loading Google AdSense ad:', error)
-      console.error('[AdSense] Ad details:', { adClient, adSlot, adFormat, testMode })
     }
-  }
+  }, [])
 
-  // Don't render anything if consent not given
-  if (!consentGiven) return null
+  // Load ad once the script is ready
+  useEffect(() => {
+    if (!scriptReady) return
+    loadAd()
+  }, [scriptReady, loadAd])
 
-  // Don't render ads in development unless test mode is enabled
-  if (process.env.NODE_ENV === 'development' && !testMode) {
-    return (
-      <div
-        className={cn(
-          "bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-500",
-          className
-        )}
-        style={style}
-      >
-        <div className="text-sm font-medium">Google AdSense Ad</div>
-        <div className="text-xs mt-1">Slot: {adSlot}</div>
-        <div className="text-xs">Format: {adFormat}</div>
-      </div>
-    )
-  }
-
-  // Don't render anything if script is not ready
-  if (!scriptReady) {
-    return (
-      <div className={cn("google-ad-placeholder w-full", className)}>
-        <div className="flex items-center justify-center h-32 bg-muted/20 rounded-lg border-2 border-dashed border-muted-foreground/20">
-          <div className="text-center">
-            <div className="text-sm text-muted-foreground">Loading AdSense...</div>
-            {testMode && (
-              <div className="text-xs text-muted-foreground mt-1">Test Mode</div>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <>
@@ -198,41 +107,55 @@ export function GoogleAdsense({
         id={`adsense-${adClient}`}
         strategy="afterInteractive"
         src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
+        crossOrigin="anonymous"
         onLoad={() => {
-          console.log('[AdSense] Script loaded successfully')
+          if (typeof window !== 'undefined') {
+            window.adsbygoogle = window.adsbygoogle || []
+          }
           setScriptReady(true)
         }}
         onError={(error) => {
           console.error('[AdSense] Script loading error:', error)
         }}
       />
-      
-      <div
-        ref={adRef}
-        className={cn("google-ad-container w-full", className)}
-        style={{
-          width: "100%",
-          maxWidth: "2000px",
-          margin: "0 auto"
-        }}
-      >
-        <ins
-          key={adSlot}
-          className="adsbygoogle"
+
+      {!scriptReady ? (
+        <div className={cn("google-ad-placeholder w-full", className)}>
+          <div className="flex items-center justify-center h-32 bg-muted/20 rounded-lg border-2 border-dashed border-muted-foreground/20">
+            <div className="text-center">
+              <div className="text-sm text-muted-foreground">Ad placeholder</div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          ref={adRef}
+          className={cn("google-ad-container w-full", className)}
           style={{
-            display: 'block',
-            width: '100%',
-            minWidth: '300px',
-            minHeight: '250px',
-            ...style
+            width: "100%",
+            maxWidth: "2000px",
+            margin: "0 auto"
           }}
-          data-ad-client={adClient}
-          data-ad-slot={adSlot}
-          data-ad-format={adFormat}
-          data-full-width-responsive={fullWidthResponsive.toString()}
-          data-ad-test={testMode ? 'on' : undefined}
-        />
-      </div>
+        >
+          <ins
+            ref={insRef}
+            key={`${adClient}-${adSlot}`}
+            className="adsbygoogle"
+            style={{
+              display: 'block',
+              width: '100%',
+              minWidth: '300px',
+              minHeight: '250px',
+              ...style
+            }}
+            data-ad-client={adClient}
+            data-ad-slot={adSlot}
+            data-ad-format={adFormat}
+            data-full-width-responsive={fullWidthResponsive.toString()}
+            data-ad-test={testMode ? 'on' : undefined}
+          />
+        </div>
+      )}
     </>
   )
 }
