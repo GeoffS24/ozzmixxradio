@@ -32,7 +32,7 @@ export function GoogleAdsense({
   testMode = false,
   lazyLoading = true,
 }: GoogleAdsenseProps) {
-  const adRef = useRef<HTMLModElement>(null)
+  const adRef = useRef<HTMLDivElement>(null)
   const isLoaded = useRef(false)
   const [scriptReady, setScriptReady] = useState(false)
   const [consentGiven, setConsentGiven] = useState(false)
@@ -126,7 +126,11 @@ export function GoogleAdsense({
       observer.observe(adRef.current)
     }
 
-    return () => observer.disconnect()
+    return () => {
+      if (observer && observer.disconnect) {
+        observer.disconnect()
+      }
+    }
   }, [consentGiven, lazyLoading, scriptReady])
 
   const loadAd = () => {
@@ -138,18 +142,13 @@ export function GoogleAdsense({
     console.log(`[AdSense] Attempting to load ad - Client: ${adClient}, Slot: ${adSlot}, Format: ${adFormat}`)
 
     try {
-      if (typeof window !== 'undefined') {
-        if (!window.adsbygoogle) {
-          console.error('[AdSense] adsbygoogle array not found. Script may not be loaded.')
-          // Try to initialize the array
-          window.adsbygoogle = window.adsbygoogle || []
-          console.log('[AdSense] Initialized adsbygoogle array')
-        }
-
+      if (typeof window !== 'undefined' && window.adsbygoogle) {
         console.log('[AdSense] Pushing ad to adsbygoogle array')
         window.adsbygoogle.push({})
         isLoaded.current = true
         console.log('[AdSense] Ad loaded successfully')
+      } else {
+        console.error('[AdSense] adsbygoogle array not found. Script may not be loaded.')
       }
     } catch (error) {
       console.error('[AdSense] Error loading Google AdSense ad:', error)
@@ -198,18 +197,13 @@ export function GoogleAdsense({
       <Script
         id={`adsense-${adClient}`}
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
-                var script = document.createElement('script');
-                script.async = true;
-                script.crossOrigin = 'anonymous';
-                script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}';
-                document.head.appendChild(script);
-              }
-            })();
-          `
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
+        onLoad={() => {
+          console.log('[AdSense] Script loaded successfully')
+          setScriptReady(true)
+        }}
+        onError={(error) => {
+          console.error('[AdSense] Script loading error:', error)
         }}
       />
       
