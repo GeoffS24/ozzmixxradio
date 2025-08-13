@@ -13,12 +13,10 @@ export function BlogCard({ image, tag, readTime, title, description }: BlogCardP
   return (
     <div className="flex flex-col items-start gap-6 flex-1">
       <div className="relative h-[221px] sm:h-[350px] lg:h-auto w-full lg:aspect-[1/0.67] overflow-hidden rounded-lg">
-        <Image
+        <img
           src={image}
           alt={title}
-          fill
-          className="object-cover transition-transform duration-300 hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 hover:scale-105 w-full"
         />
       </div>
       <div className="flex flex-col items-start gap-4 w-full">

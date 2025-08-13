@@ -14,6 +14,154 @@ export const scheduleType = defineType({
       initialValue: 'Weekly Radio Schedule',
     }),
     defineField({
+      name: 'heroSection',
+      title: 'Hero Section',
+      type: 'object',
+      description: 'Configure the hero section that appears at the top of the schedule page',
+      fields: [
+        defineField({
+          name: 'enabled',
+          title: 'Enable Hero Section',
+          type: 'boolean',
+          initialValue: true,
+          description: 'Show or hide the hero section on the schedule page',
+        }),
+        defineField({
+          name: 'title',
+          title: 'Hero Title',
+          type: 'string',
+          initialValue: 'Radio Schedule',
+          description: 'Main heading displayed in the hero section',
+        }),
+        defineField({
+          name: 'description',
+          title: 'Hero Description',
+          type: 'text',
+          rows: 3,
+          initialValue: 'Tune in to our weekly schedule for engaging shows and insightful discussions that keep you entertained.',
+          description: 'Subtitle/description text displayed below the title',
+        }),
+        defineField({
+          name: 'backgroundType',
+          title: 'Background Type',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Gradient', value: 'gradient' },
+              { title: 'Image', value: 'image' },
+              { title: 'Solid Color', value: 'color' },
+            ],
+          },
+          initialValue: 'gradient',
+          description: 'Choose the type of background for the hero section',
+        }),
+        defineField({
+          name: 'backgroundImage',
+          title: 'Background Image',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+              description: 'Important for accessibility and SEO',
+            }),
+          ],
+          hidden: ({ parent }) => parent?.backgroundType !== 'image',
+          description: 'Background image for the hero section (only shown when Background Type is set to Image)',
+        }),
+        defineField({
+          name: 'backgroundColor',
+          title: 'Background Color',
+          type: 'color',
+          options: {
+            disableAlpha: false,
+          },
+          hidden: ({ parent }) => parent?.backgroundType !== 'color',
+          description: 'Solid background color (only shown when Background Type is set to Solid Color)',
+        }),
+        defineField({
+          name: 'gradientColors',
+          title: 'Gradient Colors',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'from',
+              title: 'From Color',
+              type: 'color',
+              options: {
+                disableAlpha: false,
+              },
+              initialValue: { hex: '#3b82f6' }, // primary color
+            }),
+            defineField({
+              name: 'to',
+              title: 'To Color',
+              type: 'color',
+              options: {
+                disableAlpha: false,
+              },
+              initialValue: { hex: '#1e40af' }, // primary/80
+            }),
+            defineField({
+              name: 'direction',
+              title: 'Gradient Direction',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Top to Bottom', value: 'to-b' },
+                  { title: 'Bottom to Top', value: 'to-t' },
+                  { title: 'Left to Right', value: 'to-r' },
+                  { title: 'Right to Left', value: 'to-l' },
+                  { title: 'Top-Left to Bottom-Right', value: 'to-br' },
+                  { title: 'Top-Right to Bottom-Left', value: 'to-bl' },
+                  { title: 'Bottom-Left to Top-Right', value: 'to-tr' },
+                  { title: 'Bottom-Right to Top-Left', value: 'to-tl' },
+                ],
+              },
+              initialValue: 'to-br',
+            }),
+          ],
+          hidden: ({ parent }) => parent?.backgroundType !== 'gradient',
+          description: 'Gradient colors and direction (only shown when Background Type is set to Gradient)',
+        }),
+        defineField({
+          name: 'textColor',
+          title: 'Text Color',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'White', value: 'white' },
+              { title: 'Black', value: 'black' },
+              { title: 'Primary', value: 'primary' },
+              { title: 'Secondary', value: 'secondary' },
+            ],
+          },
+          initialValue: 'white',
+          description: 'Color of the text in the hero section',
+        }),
+        defineField({
+          name: 'minHeight',
+          title: 'Minimum Height',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Small (30vh)', value: '30vh' },
+              { title: 'Medium (40vh)', value: '40vh' },
+              { title: 'Large (50vh)', value: '50vh' },
+              { title: 'Extra Large (60vh)', value: '60vh' },
+              { title: 'Full Screen (100vh)', value: '100vh' },
+            ],
+          },
+          initialValue: '40vh',
+          description: 'Minimum height of the hero section',
+        }),
+      ],
+    }),
+    defineField({
       name: 'timezone',
       title: 'Station Timezone',
       type: 'string',

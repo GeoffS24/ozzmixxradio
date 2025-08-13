@@ -187,6 +187,19 @@ export const initialScheduleData = {
   _id: 'weeklySchedule',
   _type: 'schedule',
   title: 'Weekly Radio Schedule',
+  heroSection: {
+    enabled: true,
+    title: 'Radio Schedule',
+    description: 'Tune in to our weekly schedule for engaging shows and insightful discussions that keep you entertained.',
+    backgroundType: 'gradient',
+    gradientColors: {
+      from: { hex: '#3b82f6' },
+      to: { hex: '#1e40af' },
+      direction: 'to-br',
+    },
+    textColor: 'white',
+    minHeight: '40vh',
+  },
   timezone: 'Australia/Melbourne',
   weeklySchedule: [
     {

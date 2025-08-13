@@ -1,4 +1,5 @@
 import { ScheduleSection } from '@/components/organisms/home/scheduleSection'
+import { HeroSection } from '@/components/molecules/hero/HeroSection'
 import type { ScheduleData } from '@/types/sanity'
 
 interface SchedulePageDetailProps {
@@ -6,19 +7,27 @@ interface SchedulePageDetailProps {
 }
 
 export function SchedulePageDetail({ schedule }: SchedulePageDetailProps) {
+  // Fallback hero data if not configured in Sanity
+  const defaultHeroData = {
+    enabled: true,
+    title: 'Radio Schedule',
+    description: 'Tune in to our weekly schedule for engaging shows and insightful discussions that keep you entertained.',
+    backgroundType: 'gradient' as const,
+    gradientColors: {
+      from: { hex: '#3b82f6' },
+      to: { hex: '#1e40af' },
+      direction: 'to-br',
+    },
+    textColor: 'white' as const,
+    minHeight: '40vh',
+  }
+
+  const heroData = schedule?.heroSection || defaultHeroData
+
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative flex items-center justify-center min-h-[40vh] bg-gradient-to-br from-primary to-primary/80">
-        <div className="container mx-auto px-5 text-center text-white">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Radio Schedule
-          </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Tune in to our weekly schedule for engaging shows and insightful discussions that keep you entertained.
-          </p>
-        </div>
-      </section>
+      {/* Dynamic Hero Section */}
+      <HeroSection heroData={heroData} />
 
       {/* Schedule Section */}
       <ScheduleSection

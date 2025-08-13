@@ -153,8 +153,34 @@ export interface ScheduleData {
   _id: string
   _type: 'schedule'
   title?: string
+  heroSection?: ScheduleHeroSectionData
   timezone?: string
   weeklySchedule?: DaySchedule[]
+}
+
+export interface ScheduleHeroSectionData {
+  enabled?: boolean
+  title?: string
+  description?: string
+  backgroundType?: 'gradient' | 'image' | 'color'
+  backgroundImage?: SanityImage
+  backgroundColor?: {
+    hex: string
+    alpha?: number
+  }
+  gradientColors?: {
+    from?: {
+      hex: string
+      alpha?: number
+    }
+    to?: {
+      hex: string
+      alpha?: number
+    }
+    direction?: string
+  }
+  textColor?: 'white' | 'black' | 'primary' | 'secondary'
+  minHeight?: string
 }
 
 export interface DaySchedule {

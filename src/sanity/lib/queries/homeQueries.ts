@@ -160,6 +160,35 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == 'homePage' && _id == 'hom
 export const SCHEDULE_QUERY = defineQuery(`*[_type == 'schedule' && _id == 'weeklySchedule'][0] {
   _id,
   title,
+  heroSection {
+    enabled,
+    title,
+    description,
+    backgroundType,
+    backgroundImage {
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
+    backgroundColor {
+      hex,
+      alpha
+    },
+    gradientColors {
+      from {
+        hex,
+        alpha
+      },
+      to {
+        hex,
+        alpha
+      },
+      direction
+    },
+    textColor,
+    minHeight
+  },
   timezone,
   weeklySchedule[] {
     dayOfWeek,
