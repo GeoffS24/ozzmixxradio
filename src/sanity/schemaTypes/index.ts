@@ -7,6 +7,7 @@ import {authorType} from './authorType'
 import {scheduleType} from './scheduleType'
 import {homePageType} from './homePageType'
 import {aboutPageType} from './aboutPageType'
+import {newsListingPageType} from './newsListingPageType'
 import {radioStationType} from './radioStationType'
 import {legalPageType} from './legalPageType'
 import {flashySectionType} from './flashySectionType'
@@ -24,6 +25,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     // Page types
     homePageType,
     aboutPageType,
+    newsListingPageType,
 
     // Configuration types
     scheduleType,

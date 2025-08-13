@@ -4,8 +4,8 @@ import { NewsListingStructuredData } from "@/components/molecules/seo/NewsListin
 import { ShowPlayerButton } from "@/components/atoms/ui/ShowPlayerButton";
 import { sanityFetch } from "@/sanity/lib/live";
 import { POSTS_QUERY } from "@/sanity/lib/queries/homeQueries";
-import { CATEGORIES_QUERY } from "@/sanity/lib/queries/newsQueries";
-import type { BlogPost, Category } from "@/types/sanity";
+import { CATEGORIES_QUERY, NEWS_LISTING_PAGE_QUERY } from "@/sanity/lib/queries/newsQueries";
+import type { BlogPost, Category, NewsListingPageData } from "@/types/sanity";
 
 export const metadata: Metadata = {
   title: "News & Blog - OZZ Dance Radio",
@@ -28,11 +28,11 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   const searchQuery = search || "";
   const categoryFilter = category || "";
 
-  const [postsData, categoriesData] = await Promise.all([
+  const [postsData, categoriesData, newsListingPageData] = await Promise.all([
     sanityFetch({
       query: POSTS_QUERY,
-      params: { 
-        limit: postsPerPage * 3, 
+      params: {
+        limit: postsPerPage * 3,
         search: searchQuery,
         category: categoryFilter,
       },
@@ -40,10 +40,14 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     sanityFetch({
       query: CATEGORIES_QUERY,
     }),
+    sanityFetch({
+      query: NEWS_LISTING_PAGE_QUERY,
+    }),
   ]);
 
   const posts = postsData.data as BlogPost[] | null;
   const categories = categoriesData.data as Category[] | null;
+  const newsListingPage = newsListingPageData.data as NewsListingPageData | null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -54,6 +58,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
         postsPerPage={postsPerPage}
         searchQuery={searchQuery}
         categoryFilter={categoryFilter}
+        newsListingPageData={newsListingPage}
       />
       <NewsListingStructuredData
         posts={posts || []}

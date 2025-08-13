@@ -148,6 +148,52 @@ export interface AboutSEOSettings {
   ogImage?: SanityImage
 }
 
+// News Listing Page Types
+export interface NewsListingPageData {
+  _id: string
+  _type: 'newsListingPage'
+  title?: string
+  headerSection?: NewsListingHeaderSectionData
+  seoSettings?: NewsListingSEOSettings
+}
+
+export interface NewsListingHeaderSectionData {
+  enabled?: boolean
+  badge?: string
+  title?: string
+  description?: string
+  alignment?: 'left' | 'center' | 'right'
+  backgroundType?: 'default' | 'gradient' | 'image' | 'color'
+  backgroundImage?: SanityImage
+  backgroundColor?: {
+    hex: string
+    alpha?: number
+  }
+  gradientColors?: {
+    from?: {
+      hex: string
+      alpha?: number
+    }
+    to?: {
+      hex: string
+      alpha?: number
+    }
+    direction?: string
+  }
+  textColor?: 'default' | 'white' | 'black' | 'primary' | 'secondary'
+  spacing?: {
+    paddingTop?: string
+    paddingBottom?: string
+  }
+}
+
+export interface NewsListingSEOSettings {
+  metaTitle?: string
+  metaDescription?: string
+  keywords?: string[]
+  ogImage?: SanityImage
+}
+
 // Schedule Types
 export interface ScheduleData {
   _id: string

@@ -38,7 +38,6 @@ export const structure: StructureResolver = (S) =>
                 ),
             ])
         ),
-
       S.divider(),
 
       // Schedule Section
@@ -70,6 +69,13 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem('post').title('Blog Posts'),
               S.documentTypeListItem('category').title('Categories'),
               S.documentTypeListItem('author').title('Authors'),
+              S.documentTypeListItem('newsListingPage')
+                .title('News Listing Page Settings')
+                .child(
+                  S.document()
+                    .schemaType('newsListingPage')
+                    .documentId('newsListingPage')
+                ),
             ])
         ),
 
@@ -171,6 +177,6 @@ export const structure: StructureResolver = (S) =>
 
       // Other document types (if any)
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'author', 'homePage', 'aboutPage', 'schedule', 'radioStation', 'legalPage', 'contactSubmission'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'author', 'homePage', 'aboutPage', 'newsListingPage', 'schedule', 'radioStation', 'legalPage', 'contactSubmission'].includes(item.getId()!),
       ),
     ])

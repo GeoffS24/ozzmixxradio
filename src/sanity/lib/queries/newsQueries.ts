@@ -1,5 +1,56 @@
 import { defineQuery } from "next-sanity";
 
+// News Listing Page Query
+export const NEWS_LISTING_PAGE_QUERY = defineQuery(`*[_type == 'newsListingPage' && _id == 'newsListingPage'][0] {
+  _id,
+  title,
+  headerSection {
+    enabled,
+    badge,
+    title,
+    description,
+    alignment,
+    backgroundType,
+    backgroundImage {
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
+    backgroundColor {
+      hex,
+      alpha
+    },
+    gradientColors {
+      from {
+        hex,
+        alpha
+      },
+      to {
+        hex,
+        alpha
+      },
+      direction
+    },
+    textColor,
+    spacing {
+      paddingTop,
+      paddingBottom
+    }
+  },
+  seoSettings {
+    metaTitle,
+    metaDescription,
+    keywords,
+    ogImage {
+      asset,
+      alt,
+      hotspot,
+      crop
+    }
+  }
+}`);
+
 // Categories Query
 export const CATEGORIES_QUERY = defineQuery(`*[_type == 'category'] | order(title asc) {
   _id,

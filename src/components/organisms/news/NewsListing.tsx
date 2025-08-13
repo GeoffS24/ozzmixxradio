@@ -3,13 +3,13 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search } from 'lucide-react'
-import { SectionHeader } from '@/components/atoms/ui/SectionHeader'
+import { DynamicSectionHeader } from '@/components/molecules/headers/DynamicSectionHeader'
 import { FilterButton } from '@/components/atoms/ui/FilterButton'
 import { BlogCard } from '@/components/molecules/cards/BlogCard'
 import { SearchInput } from '@/components/molecules/forms/SearchInput'
 import { Pagination } from '@/components/molecules/navigation/Pagination'
 import { urlFor } from '@/sanity/lib/image'
-import type { BlogPost, Category } from '@/types/sanity'
+import type { BlogPost, Category, NewsListingPageData } from '@/types/sanity'
 
 interface NewsListingProps {
   posts: BlogPost[]
@@ -18,6 +18,7 @@ interface NewsListingProps {
   postsPerPage: number
   searchQuery: string
   categoryFilter: string
+  newsListingPageData?: NewsListingPageData | null
 }
 
 export function NewsListing({
@@ -27,6 +28,7 @@ export function NewsListing({
   postsPerPage,
   searchQuery,
   categoryFilter,
+  newsListingPageData,
 }: NewsListingProps) {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery)
   const [localCategoryFilter, setLocalCategoryFilter] = useState(categoryFilter)
@@ -96,15 +98,31 @@ export function NewsListing({
     }
   })
 
+  // Fallback header data if not configured in Sanity
+  const defaultHeaderData = {
+    enabled: true,
+    badge: 'News & Blog',
+    title: 'Latest Music Industry Insights',
+    description: 'Stay updated with the latest in music, radio, and the entertainment industry.',
+    alignment: 'center' as const,
+    backgroundType: 'default' as const,
+    textColor: 'default' as const,
+    spacing: {
+      paddingTop: 'pt-16',
+      paddingBottom: 'pb-20',
+    },
+  }
+
+  const headerData = newsListingPageData?.headerSection || defaultHeaderData
+
   return (
-    <section className="flex py-16 lg:py-20 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
-      <div className="flex container mx-auto flex-col items-center gap-12 lg:gap-16 w-full">
-        <SectionHeader
-          badge="News & Blog"
-          title="Latest Music Industry Insights"
-          description="Stay updated with the latest in music, radio, and the entertainment industry."
-          alignment="center"
-        />
+    <>
+      {/* Dynamic Header Section */}
+      <DynamicSectionHeader headerData={headerData} />
+
+      {/* Content Section */}
+      <section className="flex py-0 px-5 flex-col items-center gap-12 lg:gap-20 bg-white">
+        <div className="flex container mx-auto flex-col items-center gap-12 lg:gap-16 w-full">
 
         <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
           <SearchInput
@@ -181,5 +199,6 @@ export function NewsListing({
         )}
       </div>
     </section>
+    </>
   )
 }

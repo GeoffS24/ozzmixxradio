@@ -492,3 +492,36 @@ export const initialRadioStationData = {
     keywords: ['dance music', 'electronic music', 'house music', 'radio station', 'live DJ', 'music streaming'],
   },
 }
+
+export const initialNewsListingPageData = {
+  _id: 'newsListingPage',
+  _type: 'newsListingPage',
+  title: 'News Listing Page',
+  headerSection: {
+    enabled: true,
+    badge: 'News & Blog',
+    title: 'Latest Music Industry Insights',
+    description: 'Stay updated with the latest in music, radio, and the entertainment industry.',
+    alignment: 'center',
+    backgroundType: 'default',
+    textColor: 'default',
+    spacing: {
+      paddingTop: 'pt-16',
+      paddingBottom: 'pb-20',
+    },
+  },
+  seoSettings: {
+    metaTitle: 'News & Blog - OZZ Dance Radio',
+    metaDescription: 'Stay updated with the latest music industry news, radio insights, and entertainment updates from OZZ Dance Radio.',
+    keywords: [
+      'music news',
+      'radio news',
+      'dance music',
+      'entertainment industry',
+      'music blog',
+      'OZZ Dance Radio',
+      'music insights',
+      'industry updates',
+    ],
+  },
+}
