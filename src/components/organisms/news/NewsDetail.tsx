@@ -146,12 +146,10 @@ export function NewsDetail({ post, relatedPosts }: NewsDetailProps) {
           {/* Featured Image */}
           {mainImageUrl && (
             <div className="relative w-full h-96 lg:h-[500px] rounded-xl overflow-hidden mb-12">
-              <Image
+              <img
                 src={mainImageUrl}
                 alt={post.mainImage?.alt || post.title || 'Article image'}
-                fill
                 className="object-cover"
-                priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               />
             </div>
